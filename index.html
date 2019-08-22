@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chatroom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        form {
+            background: #000;
+            padding: 3px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+        #messages li:nth-child(odd) {
+            background: #eee;
+        }
+    </style>
+
+</head>
+
+<body>
+    <p>Active users: <span id='userCount'></span></p>
+    <p><span id='userList'></span></p>
+    <ul id="messages">
+        <!-- chats -->
+    </ul>
+    <form action="">
+        <input id="message" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+        // globals 
+        var message = document.getElementById('message');
+        var messages = document.getElementById('messages');
+        var userTally = document.getElementById('userCount');
+        var userList = document.getElementById('userList');
+
+        function appendLi(str) {
+            var li = document.createElement('LI');
+            var msgNode = document.createTextNode(str);
+            li.appendChild(msgNode);
+            messages.appendChild(li);
+        }
+
+        function removeIsTypingDuplicates(str) {
+            var listItems = document.querySelectorAll('#messages li');
+            for (var i = 0; i < listItems.length; i++) {
+                if (i !== listItems.length - 1) {
+                    if (listItems[i].textContent === str) {
+                        listItems[i].parentNode.removeChild(listItems[i]);
+                    }
+                }
+            }
+        }
+
+        function removeTrailingTyping() {
+            setTimeout(function () {
+                var listItems = document.querySelectorAll('#messages li');
+                var lastItem = listItems[listItems.length - 1];
+                if (lastItem.textContent.includes('is typing...')) {
+                    lastItem.parentNode.removeChild(lastItem);
+                }
+            }, 1000);
+        }
+
+        // initialize sockets 
+        $(function () {
+            var socket = io();
+            $('form').submit(function (e) {
+                e.preventDefault(); // prevents page reloading
+                socket.emit('chat message', $('#message').val());
+                message.value = '';
+                return false;
+            });
+
+            socket.on('chat message', function (msg) {
+                appendLi(msg);
+            });
+
+            socket.on('userCount', function (data) {
+                userTally.innerText = data.userCount;
+                userList.innerText = data.userList;
+            });
+
+            socket.on('userJoined', function (data) {
+                appendLi(data);
+            });
+
+            socket.on('userLeft', function (data) {
+                appendLi(data);
+                userTally.innerText = data.userCount;
+                userList.innerText = data.userList;
+            });
+
+            // notify room when a user is typing 
+            var timeout;
+            function timeoutFunction() {
+                typing = false;
+                socket.emit('typing', false);
+            }
+
+            $('#message').keyup(function () {
+                typing = true;
+                socket.emit('typing', 'typing...');
+                clearTimeout(timeout);
+                timeout = setTimeout(timeoutFunction, 2000);
+            });
+
+            socket.on('typing', function (data) {
+                if (data && !data.includes('is false')) {
+                    appendLi(data);
+                    removeIsTypingDuplicates(data);
+                }
+                removeTrailingTyping();
+            });
+
+            // to do... 
+
+        });
+    </script>
+</body>
+
+</html>
