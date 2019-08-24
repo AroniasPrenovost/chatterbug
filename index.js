@@ -6,25 +6,26 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-var userCount = 0;
+// var userCount = 0;
 var users = [];
 
 io.on('connection', function (socket) {
 
     // { address: '::1', family: 'IPv6', port: 61604 }
     const socket_data = socket.request.connection._peername;
+    socket_data.alias = undefined;
 
     // handle duplicate connections 
-    for (var i = 0; i < users.length; i++) {
-        if (users[i].port === socket_data.port) {
-            io.emit('duplicateUser');
-        }
-    }
+    // for (var i = 0; i < users.length; i++) {
+    //     if (users[i].port === socket_data.port) {
+    //         io.emit('duplicateUser');
+    //     }
+    // }
 
     users.push(socket_data);
 
     // count # of connections 
-    userCount++;
+    // userCount++;
 
     // get names of users 
     var userNames = [];
@@ -32,7 +33,7 @@ io.on('connection', function (socket) {
         userNames.push(e.port);
     });
     io.sockets.emit('userCount', {
-        userCount: userCount,
+        userCount: userNames.length,
         userList: userNames
     });
 
@@ -50,7 +51,7 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
 
         io.emit('userLeft', socket_data.port + ' left the room');
-        userCount--;
+        // userCount--;
         for (var i = 0; i < users.length; i++) {
             if (users[i].port === socket_data.port) {
                 users.splice([i], 1);
@@ -62,7 +63,7 @@ io.on('connection', function (socket) {
             userNames.push(e.port);
         });
         io.sockets.emit('userCount', {
-            userCount: userCount,
+            userCount: userNames.length,
             userList: userNames
         });
     });
