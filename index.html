@@ -14,7 +14,7 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        form {
+        form:not(#username) {
             background: #000;
             padding: 3px;
             position: fixed;
@@ -22,14 +22,14 @@
             width: 100%;
         }
 
-        form input {
+        form:not(#username) input {
             border: 0;
             padding: 10px;
             width: 90%;
             margin-right: .5%;
         }
 
-        form button {
+        form:not(#username) button {
             width: 9%;
             background: rgb(130, 224, 255);
             border: none;
@@ -55,18 +55,21 @@
 <body>
     <p>Active users: <span id='userCount'></span></p>
     <p><span id='userList'></span></p>
-    <ul id="messages">
+
+    <ul id='messages'>
         <!-- chats -->
     </ul>
-    <form action="">
-        <input id="message" autocomplete="off" /><button>Send</button>
+
+    <form id='chat' action=''>
+        <input id='message' autocomplete='off' /><button>Send</button>
     </form>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src='/socket.io/socket.io.js'></script>
+    <script src='https://code.jquery.com/jquery-1.11.1.js'></script>
     <script>
 
         // globals 
+        var username = document.getElementById('username');
         var message = document.getElementById('message');
         var messages = document.getElementById('messages');
         var userTally = document.getElementById('userCount');
@@ -104,20 +107,21 @@
         $(function () {
             var socket = io();
 
-            $('form').submit(function (e) {
+            // socket.on('duplicateUser', function () {
+            //     socket.disconnect();s
+            // });
+
+            // chatroom message 
+            $('form#chat').submit(function (e) {
                 e.preventDefault(); // prevents page reloading
                 socket.emit('chat message', $('#message').val());
                 message.value = '';
                 return false;
             });
 
-            socket.on('chat message', function (msg) {
+            socket.on('chatMessage', function (msg) {
                 appendLi(msg);
             });
-
-            // socket.on('duplicateUser', function () {
-            //     socket.disconnect();s
-            // });
 
             socket.on('userCount', function (data) {
                 userTally.innerText = data.userCount;

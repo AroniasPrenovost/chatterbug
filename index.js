@@ -6,7 +6,6 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-// var userCount = 0;
 var users = [];
 
 io.on('connection', function (socket) {
@@ -24,9 +23,6 @@ io.on('connection', function (socket) {
 
     users.push(socket_data);
 
-    // count # of connections 
-    // userCount++;
-
     // get names of users 
     var userNames = [];
     users.forEach((e) => {
@@ -39,7 +35,8 @@ io.on('connection', function (socket) {
 
     // chat 
     socket.on('chat message', function (msg) {
-        io.emit('chat message', socket_data.port + ': ' + msg);
+        io.emit('chatMessage', socket_data.port + ': ' + msg);
+        socket_data.message = msg;
     });
 
     // notify when user enters room 
@@ -51,7 +48,6 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
 
         io.emit('userLeft', socket_data.port + ' left the room');
-        // userCount--;
         for (var i = 0; i < users.length; i++) {
             if (users[i].port === socket_data.port) {
                 users.splice([i], 1);
