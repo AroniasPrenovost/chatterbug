@@ -56,10 +56,6 @@
     <p>Active users: <span id='userCount'></span></p>
     <p><span id='userList'></span></p>
 
-    <form id='username' action=''>
-        <input id='username' autocomplete='off' /><button>Create username</button>
-    </form>
-
     <ul id='messages'>
         <!-- chats -->
     </ul>
@@ -108,26 +104,17 @@
         }
 
         // get username on init
-        // var usernameInput = prompt('Enter your username');
+        var usernameInput = prompt('Enter your username');
 
         // initialize sockets   
         $(function () {
             var socket = io();
 
             // socket.on('duplicateUser', function () {
-            //     socket.disconnect();s
+            //     socket.disconnect();
             // });
 
-            $('form#username').submit(function (e) {
-                e.preventDefault(); // prevents page reloading
-                var usernameInput = $('#username').val()
-                // socket.emit('chat message', $('#message').val());
-                socket.emit('newuser', usernameInput);
-                usernameInput.value = '';
-                return false;
-            });
-
-
+            socket.emit('newuser', usernameInput);
 
             // chatroom message 
             $('form#chat').submit(function (e) {

@@ -11,24 +11,21 @@ var users = [];
 io.on('connection', function (socket) {
     socket.on('newuser', function (usernameInput) {
 
-        // { address: '::1', family: 'IPv6', port: 61604 }
-        const socket_data = socket.request.connection._peername;
-        socket_data.alias = usernameInput;
-
         // handle duplicate connections 
         // for (var i = 0; i < users.length; i++) {
-        //     if (users[i].port === socket_data.port) {
+        //     if (users[i].port === socket.request.connection._peername.port) {
         //         io.emit('duplicateUser');
         //     }
         // }
 
+        // { address: '::1', family: 'IPv6', port: 61604 }
+        const socket_data = socket.request.connection._peername;
+        socket_data.alias = usernameInput;
         users.push(socket_data);
 
         // get names of users 
         var userNames = [];
-        users.forEach((e) => {
-            userNames.push(e.port);
-        });
+        users.forEach((e) => { userNames.push(e.alias); });
         io.sockets.emit('userCount', {
             userCount: userNames.length,
             userList: userNames
@@ -36,19 +33,18 @@ io.on('connection', function (socket) {
 
         // chat 
         socket.on('chat message', function (msg) {
-            io.emit('chatMessage', socket_data.port + ': ' + msg);
+            io.emit('chatMessage', socket_data.alias + ': ' + msg);
             socket_data.message = msg;
         });
 
         // notify when user enters room 
         socket.join('room', function () {
-            io.emit('userJoined', socket_data.port + ' joined the room');
+            io.emit('userJoined', socket_data.alias + ' joined the room');
         });
 
         // notify when user exits room 
         socket.on('disconnect', function () {
-
-            io.emit('userLeft', socket_data.port + ' left the room');
+            io.emit('userLeft', socket_data.alias + ' left the room');
             for (var i = 0; i < users.length; i++) {
                 if (users[i].port === socket_data.port) {
                     users.splice([i], 1);
@@ -56,9 +52,7 @@ io.on('connection', function (socket) {
             }
 
             var userNames = [];
-            users.forEach((e) => {
-                userNames.push(e.port);
-            });
+            users.forEach((e) => { userNames.push(e.alias); });
             io.sockets.emit('userCount', {
                 userCount: userNames.length,
                 userList: userNames
@@ -67,7 +61,7 @@ io.on('connection', function (socket) {
 
         // show when user is typing 
         socket.on('typing', function (data) {
-            socket.broadcast.emit('typing', socket_data.port + ' is ' + data);
+            socket.broadcast.emit('typing', socket_data.alias + ' is ' + data);
         });
     });
 });
