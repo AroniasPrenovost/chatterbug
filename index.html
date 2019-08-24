@@ -103,13 +103,18 @@
             }, 1000);
         }
 
-        // initialize sockets 
+        // get username on init
+        var usernameInput = prompt('Enter your username');
+
+        // initialize sockets   
         $(function () {
             var socket = io();
 
             // socket.on('duplicateUser', function () {
             //     socket.disconnect();s
             // });
+
+            socket.emit('newuser', usernameInput);
 
             // chatroom message 
             $('form#chat').submit(function (e) {
