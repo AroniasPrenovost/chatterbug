@@ -151,6 +151,7 @@
         // initialize sockets 
         $(function () {
             var socket = io();
+
             $('form').submit(function (e) {
                 e.preventDefault(); // prevents page reloading
                 socket.emit('chat message', $('#message').val());
@@ -160,6 +161,10 @@
 
             socket.on('chat message', function (msg) {
                 appendLi(msg);
+            });
+
+            socket.on('duplicateUser', function () {
+                socket.disconnect();
             });
 
             socket.on('userCount', function (data) {

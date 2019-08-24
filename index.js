@@ -13,6 +13,14 @@ io.on('connection', function (socket) {
 
     // { address: '::1', family: 'IPv6', port: 61604 }
     const socket_data = socket.request.connection._peername;
+
+    // handle duplicate connections 
+    for (var i = 0; i < users.length; i++) {
+        if (users[i].port === socket_data.port) {
+            io.emit('duplicateUser');
+        }
+    }
+
     users.push(socket_data);
 
     // count # of connections 
@@ -20,8 +28,8 @@ io.on('connection', function (socket) {
 
     // get names of users 
     var userNames = [];
-    users.forEach((element) => {
-        userNames.push(element.port);
+    users.forEach((e) => {
+        userNames.push(e.port);
     });
     io.sockets.emit('userCount', {
         userCount: userCount,
@@ -40,6 +48,7 @@ io.on('connection', function (socket) {
 
     // notify when user exits room 
     socket.on('disconnect', function () {
+
         io.emit('userLeft', socket_data.port + ' left the room');
         userCount--;
         for (var i = 0; i < users.length; i++) {
@@ -49,8 +58,8 @@ io.on('connection', function (socket) {
         }
 
         var userNames = [];
-        users.forEach((element) => {
-            userNames.push(element.port);
+        users.forEach((e) => {
+            userNames.push(e.port);
         });
         io.sockets.emit('userCount', {
             userCount: userCount,
