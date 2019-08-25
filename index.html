@@ -14,6 +14,26 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            height: 100%;
+            width: 100%;
+        }
+
+        .modalcontent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            width: 40%;
+            padding: 45px;
+        }
+
         form:not(#username) {
             background: #000;
             padding: 3px;
@@ -53,6 +73,15 @@
 </head>
 
 <body>
+    <div id='modal'>
+        <div class='modalcontent'>
+            <h2>Please enter a username</h2>
+            <form id='username' action=''>
+                <input id='userInName' autocomplete='off' /><button>Username</button>
+            </form>
+        </div>
+    </div>
+
     <p>Active users: <span id='userCount'></span></p>
     <p><span id='userList'></span></p>
 
@@ -66,10 +95,15 @@
 
     <script src='/socket.io/socket.io.js'></script>
     <script src='https://code.jquery.com/jquery-1.11.1.js'></script>
+
+    <script>
+
+
+    </script>
     <script>
 
         // globals 
-        var username = document.getElementById('username');
+        var username = document.getElementById('userInName');
         var message = document.getElementById('message');
         var messages = document.getElementById('messages');
         var userTally = document.getElementById('userCount');
@@ -103,9 +137,6 @@
             }, 1000);
         }
 
-        // get username on init
-        var usernameInput = prompt('Enter your username');
-
         // initialize sockets   
         $(function () {
             var socket = io();
@@ -114,12 +145,19 @@
             //     socket.disconnect();
             // });
 
-            socket.emit('newuser', usernameInput);
+            // set username
+            $('form#username').submit(function (e) {
+                e.preventDefault();
+                socket.emit('newuser', username.value);
+                document.getElementById('modal').style.display = 'none';
+                username.value = '';
+                return false;
+            });
 
             // chatroom message 
             $('form#chat').submit(function (e) {
-                e.preventDefault(); // prevents page reloading
-                socket.emit('chat message', $('#message').val());
+                e.preventDefault();
+                socket.emit('chat message', message.value);
                 message.value = '';
                 return false;
             });
@@ -150,7 +188,7 @@
                 socket.emit('typing', false);
             }
 
-            $('#message').keyup(function () {
+            message.addEventListener('keyup', function () {
                 typing = true;
                 socket.emit('typing', 'typing...');
                 clearTimeout(timeout);
