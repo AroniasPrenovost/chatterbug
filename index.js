@@ -8,15 +8,21 @@ app.get('/', function (req, res) {
 
 var users = [];
 
+function getActiveUserStats(arr) {
+    var userNames = [];
+    arr.forEach((e) => { userNames.push(e.alias); });
+    return userNames;
+}
+
 io.on('connection', function (socket) {
     socket.on('newuser', function (usernameInput) {
 
         // handle duplicate connections 
-        // for (var i = 0; i < users.length; i++) {
-        //     if (users[i].port === socket.request.connection._peername.port) {
-        //         io.emit('duplicateUser');
-        //     }
+        //     for (var i = 0; i < users.length; i++) {
+        // if (users[i].port === socket.request.connection._peername.port) {
+        //     io.emit('duplicateUser');
         // }
+        //  }
 
         // { address: '::1', family: 'IPv6', port: 61604 }
         const socket_data = socket.request.connection._peername;
@@ -24,11 +30,10 @@ io.on('connection', function (socket) {
         users.push(socket_data);
 
         // get names of users 
-        var userNames = [];
-        users.forEach((e) => { userNames.push(e.alias); });
+        var userNames = getActiveUserStats(users);
         io.sockets.emit('userCount', {
             userCount: userNames.length,
-            userList: userNames
+            userNameList: userNames
         });
 
         // chat 
@@ -51,11 +56,10 @@ io.on('connection', function (socket) {
                 }
             }
 
-            var userNames = [];
-            users.forEach((e) => { userNames.push(e.alias); });
+            var userNames = getActiveUserStats(users);
             io.sockets.emit('userCount', {
                 userCount: userNames.length,
-                userList: userNames
+                userNameList: userNames
             });
         });
 
