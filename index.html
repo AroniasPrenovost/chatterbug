@@ -105,11 +105,11 @@
         var userTally = document.getElementById('userCount');
         var userList = document.getElementById('userList');
 
-        function appendLi(str) {
+        function appendLi(str, e) {
             var li = document.createElement('LI');
             var msgNode = document.createTextNode(str);
             li.appendChild(msgNode);
-            messages.appendChild(li);
+            e.appendChild(li);
         }
 
         function removeIsTypingDuplicates(str) {
@@ -157,7 +157,7 @@
             });
 
             socket.on('chatMessage', function (msg) {
-                appendLi(msg);
+                appendLi(msg, messages);
             });
 
             socket.on('userCount', function (data) {
@@ -166,13 +166,11 @@
             });
 
             socket.on('userJoined', function (data) {
-                appendLi(data);
+                appendLi(data, messages);
             });
 
             socket.on('userLeft', function (data) {
-                appendLi(data);
-                userTally.innerText = data.userCount;
-                userList.innerText = data.userList;
+                appendLi(data, messages);
             });
 
             // notify room when a user is typing 
@@ -191,7 +189,7 @@
 
             socket.on('typing', function (data) {
                 if (data && !data.includes('is false')) {
-                    appendLi(data);
+                    appendLi(data, messages);
                     removeIsTypingDuplicates(data);
                 }
                 removeTrailingTyping();
