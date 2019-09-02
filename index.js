@@ -49,7 +49,6 @@ io.on('connection', function (socket) {
                 console.log('can\'t send messages to yourself');
                 return false;
             }
-
             for (var i = 0; i < users.length; i++) {
                 if (users[i].alias === data.alias) {
                     io.to(users[i].socket_id).emit('privateMessage', data.message);

@@ -36,6 +36,17 @@
             width: 100%;
         }
 
+        #privatemessageModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            height: 100%;
+            width: 100%;
+        }
+
         .modalcontent {
             position: absolute;
             top: 50%;
@@ -90,7 +101,16 @@
         <div class='modalcontent'>
             <h2>Please enter a username</h2>
             <form id='usernameForm' action=''>
-                <input id='usernameInput' autocomplete='off' /><button>Username</button>
+                <input id='usernameInput' autocomplete='off' /><button>Create Username</button>
+            </form>
+        </div>
+    </div>
+
+    <div id='privatemessageModal'>
+        <div class='modalcontent'>
+            <h2>Send message to: </h2>
+            <form id='privatemessageForm' action=''>
+                <input id='privatemessageInput' autocomplete='off' /><button>Send</button>
             </form>
         </div>
     </div>
@@ -116,11 +136,17 @@
     <script>
 
         // globals 
+        var usernameModal = document.getElementById('modal');
         var usernameForm = document.getElementById('usernameForm');
         var usernameInput = document.getElementById('usernameInput');
-        var usernameModal = document.getElementById('modal');
-        var chatMessageInput = document.getElementById('message');
+
+        var privatemessageModal = document.getElementById('privatemessageModal');
+        var privatemessageForm = document.getElementById('privatemessageForm');
+        var privatemessageInput = document.getElementById('privatemessageInput');
+
         var messages = document.getElementById('messages');
+        var chatmessageInput = document.getElementById('message');
+
         var userTally = document.getElementById('userCount');
         var userList = document.getElementById('userList');
 
@@ -171,18 +197,27 @@
             // chatroom message 
             chatMessageForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                socket.emit('chat message', chatMessageInput.value);
-                chatMessageInput.value = '';
+                socket.emit('chat message', chatmessageInput.value);
+                chatmessageInput.value = '';
             });
 
-            // click user list 
+            // private message 
+            var messageTargetAlias;
             userList.addEventListener('click', function (e) {
+                privatemessageModal.style.display = 'block';
                 if (e.target && e.target.matches('li')) {
-                    socket.emit('private message', {
-                        alias: e.target.innerText,
-                        message: 'test'
-                    });
+                    messageTargetAlias = e.target.innerText;
                 }
+            });
+
+            privatemessageForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                socket.emit('private message', {
+                    alias: messageTargetAlias,
+                    message: privatemessageInput.value
+                });
+                privatemessageModal.style.display = 'none';
+                privatemessageInput.value = '';
             });
 
             socket.on('privateMessage', function (msg) {
