@@ -18,15 +18,16 @@ io.on('connection', function (socket) {
     socket.on('newuser', function (usernameInput) {
 
         // handle duplicate connections 
-        //     for (var i = 0; i < users.length; i++) {
-        // if (users[i].port === socket.request.connection._peername.port) {
-        //     io.emit('duplicateUser');
+        // for (var i = 0; i < users.length; i++) {
+        //  if (users[i].port === socket.request.connection._peername.port) {
+        //         io.emit('duplicateUser');
+        // `}
         // }
-        //  }
 
         // { address: '::1', family: 'IPv6', port: 61604 }
         const socket_data = socket.request.connection._peername;
         socket_data.alias = usernameInput;
+        socket_data.socket_id = socket.id;
         users.push(socket_data);
 
         // get names of users 
@@ -36,10 +37,24 @@ io.on('connection', function (socket) {
             userNameList: userNames
         });
 
-        // chat 
+        // chat { message}
         socket.on('chat message', function (msg) {
             io.emit('chatMessage', socket_data.alias + ': ' + msg);
             socket_data.message = msg;
+        });
+
+        // private chat { alias, message}
+        socket.on('private message', function (data) {
+            if (socket_data.alias === data.alias) {
+                console.log('can\'t send messages to yourself');
+                return false;
+            }
+
+            for (var i = 0; i < users.length; i++) {
+                if (users[i].alias === data.alias) {
+                    io.to(users[i].socket_id).emit('privateMessage', data.message);
+                }
+            }
         });
 
         // notify when user enters room 
