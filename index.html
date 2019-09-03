@@ -24,6 +24,16 @@
             float: left;
             width: 50%;
             height: 50vh;
+            position: relative;
+            background: #ecf0f1;
+        }
+
+        .child:nth-child(2) {
+            background: #b4d2ba;
+        }
+
+        .child:nth-child(3) {
+            background: none;
         }
 
         #modal {
@@ -58,9 +68,8 @@
         }
 
         form#chatMessageForm {
-            background: #000;
             padding: 3px;
-            position: fixed;
+            position: absolute;
             bottom: 0;
             width: 100%;
         }
@@ -90,8 +99,71 @@
             padding: 5px 10px;
         }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
+
+        /* private message li */
+        li.active {
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+
+        .content {
+            display: none;
+            opacity: 0;
+            border: 1px solid #ccc;
+            width: 200px;
+            height: 100px;
+
+            -webkit-animation: display-none-transition 1s ease;
+            animation: display-none-transition 1s ease;
+        }
+
+        @keyframes display-none-transition {
+            0% {
+                display: none;
+                opacity: 0;
+            }
+
+            1% {
+                display: block;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes display-none-transition {
+            0% {
+                display: none;
+                opacity: 0;
+            }
+
+            1% {
+                display: block;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .content-section .active {
+            display: block;
+            opacity: 1;
+        }
+
+        #tabs ul {
+            margin-bottom: 10px;
+            padding: 0;
+        }
+
+        #tabs li {
+            list-style: none;
+            display: inline-block;
+            width: 50px;
+            margin-right: -4px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
         }
     </style>
 </head>
@@ -105,7 +177,6 @@
             </form>
         </div>
     </div>
-
     <div id='privatemessageModal'>
         <div class='modalcontent'>
             <h2>Send message to: </h2>
@@ -117,32 +188,88 @@
     <div class='container'>
         <div class='child'>
             <ul id='messages'>
+
                 <!-- chats -->
+
             </ul>
+            <form id='chatMessageForm' action=''>
+                <input id='message' autocomplete='off' /><button>Send</button>
+            </form>
         </div>
         <div class='child'>
             <p>Active users: <span id='userCount'></span></p>
             <ul id='userList'>
+
                 <!-- active users -->
+
             </ul>
+        </div>
+        <div class='child' id='privateMessages'>
+
+            <!-- private messages -->
+
+            <ul id='tabs' class='tabs'>
+                <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+                <li data-tab-id='tab2'>tab-2</li>
+                <li data-tab-id='tab3'>tab-3</li>
+                <li data-tab-id='tab4'>tab-4</li> -->
+            </ul>
+            <div id='tabContent' class='content-section'>
+                <!-- <div id='tab1' class='content active'>content-1</div>
+                <div id='tab2' class='content'>content-2</div>
+                <div id='tab3' class='content'>content-3</div>
+                <div id='tab4' class='content'>content-4</div> -->
+            </div>
+        </div>
+        <div class='child'>
+
         </div>
     </div>
 
-    <form id='chatMessageForm' action=''>
-        <input id='message' autocomplete='off' /><button>Send</button>
-    </form>
-
     <script src='/socket.io/socket.io.js'></script>
+
+    <script>
+        // private message ui code 
+        (function () {
+            var d = document,
+                tabs = d.querySelector('.tabs'),
+                tab = d.querySelectorAll('li'),
+                contents = d.querySelectorAll('.content');
+            tabs.addEventListener('click', function (e) {
+                if (e.target && e.target.nodeName === 'LI') {
+                    // change tabs
+                    for (var i = 0; i < tab.length; i++) {
+                        tab[i].classList.remove('active');
+                    }
+                    e.target.classList.toggle('active');
+
+                    // change content
+                    for (i = 0; i < contents.length; i++) {
+                        contents[i].classList.remove('active');
+                    }
+
+                    var tabId = '#' + e.target.dataset.tabId;
+                    d.querySelector(tabId).classList.toggle('active');
+                }
+            });
+        })();   
+    </script>
     <script>
 
         // globals 
         var usernameModal = document.getElementById('modal');
         var usernameForm = document.getElementById('usernameForm');
         var usernameInput = document.getElementById('usernameInput');
+        usernameInput.focus();
 
         var privatemessageModal = document.getElementById('privatemessageModal');
         var privatemessageForm = document.getElementById('privatemessageForm');
         var privatemessageInput = document.getElementById('privatemessageInput');
+
+        var tabContent = document.getElementById('tabContent');
+        var tabs = document.getElementById('tabs');
+
+        var privateMessages = document.getElementById('privateMessages');
 
         var messages = document.getElementById('messages');
         var chatmessageInput = document.getElementById('message');
@@ -201,10 +328,15 @@
                 chatmessageInput.value = '';
             });
 
+            socket.on('chatMessage', function (msg) {
+                appendLi(msg, messages);
+            });
+
             // private message 
             var messageTargetAlias;
             userList.addEventListener('click', function (e) {
                 privatemessageModal.style.display = 'block';
+                privatemessageInput.focus();
                 if (e.target && e.target.matches('li')) {
                     messageTargetAlias = e.target.innerText;
                 }
@@ -220,14 +352,64 @@
                 privatemessageInput.value = '';
             });
 
-            socket.on('privateMessage', function (msg) {
-                appendLi(msg, messages);
+            socket.on('privateMessage', function (data) {
+                var x = data.sender + ': ' + data.message;
+
+                // search through tabs for this specific chat 
+                var tabItems = document.querySelectorAll('#tabs li');
+
+                if (tabItems.length === 1) {
+                    // tab lis 
+                    var tabLi = document.createElement('LI');
+                    tabLi.innerHTML = data.sender;
+                    //   tabLi.className = 'active';
+                    tabLi.setAttribute('data-tab-id', data.sender);
+                    tabs.appendChild(tabLi);
+
+                    // tab content section
+                    var div = document.createElement('div');
+                    div.classList.add('content');
+                    //  div.classList.add('active');
+                    div.id = data.sender;
+                    div.innerHTML = 'yeah';
+
+                    // var messageUl = document.createElement('ul');
+                    // var msgLi = document.createElement('LI');
+                    // msgLi.innerHTML = x;
+
+                    // messageUl.appendChild(msgLi);
+                    // div.appendChild(messageUl);
+                    tabContent.appendChild(div);
+                    return false;
+                }
+                // generate first tabs 
+                if (tabItems.length === 0) {
+                    // tab lis 
+                    var tabLi = document.createElement('LI');
+                    tabLi.innerHTML = data.sender;
+                    tabLi.className = 'active';
+                    tabLi.setAttribute('data-tab-id', data.sender);
+                    tabs.appendChild(tabLi);
+
+                    // tab content section
+                    var div = document.createElement('div');
+                    div.classList.add('content');
+                    div.classList.add('active');
+                    div.id = data.sender;
+                    div.innerHTML = 'yeah';
+
+                    // var messageUl = document.createElement('ul');
+                    // var msgLi = document.createElement('LI');
+                    // msgLi.innerHTML = x;
+
+                    // messageUl.appendChild(msgLi);
+                    // div.appendChild(messageUl);
+                    tabContent.appendChild(div);
+                    return false;
+                }
             });
 
-            socket.on('chatMessage', function (msg) {
-                appendLi(msg, messages);
-            });
-
+            // user activity 
             socket.on('userCount', function (data) {
                 userTally.innerText = data.userCount;
                 userList.innerHTML = '';
