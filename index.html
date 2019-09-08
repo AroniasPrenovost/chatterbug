@@ -186,6 +186,7 @@
         </div>
     </div>
     <div class='container'>
+        <h4 id='nameTag'></h4>
         <div class='child'>
             <ul id='messages'>
 
@@ -211,6 +212,10 @@
         <div class='child' id='privateMessages'>
 
             <!-- private messages -->
+
+            <!-- 
+                https://codepen.io/vlt5/pen/gpNQwK
+            -->
 
             <ul id='tabs' class='tabs'>
                 <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
@@ -257,11 +262,14 @@
     </script>
     <script>
 
+
         // globals 
+        var nameTag = document.getElementById('nameTag');
         var usernameModal = document.getElementById('modal');
         var usernameForm = document.getElementById('usernameForm');
         var usernameInput = document.getElementById('usernameInput');
         usernameInput.focus();
+        var userName;
 
         var privatemessageModal = document.getElementById('privatemessageModal');
         var privatemessageForm = document.getElementById('privatemessageForm');
@@ -306,6 +314,77 @@
             }, 1000);
         }
 
+        function uniquePairMessageKey() {
+            console.log('yes');
+        }
+
+        // update private messages. args {}
+        function updatePrivateMessageLog(args) {
+            var msgSender = args.sender;
+            var msg = args.message;
+            // search tabs for unique chat id 
+            var tabItems = document.querySelectorAll('#tabs li');
+            if (tabItems.length > 0) {
+                for (var i = 0; i < tabItems.length; i++) {
+                    if (tabItems[i].attributes['data-tab-id'].nodeValue === msgSender) {
+                        var log = document.getElementById(msgSender + '_logs');
+                        var li = document.createElement('LI');
+                        li.innerHTML = `<span>${msg}</span>`;
+                        log.appendChild(li);
+                        return false;
+                    }
+                }
+                // create new private message tab 
+                var tabLi = document.createElement('LI');
+                tabLi.innerHTML = `<span>@ ${msgSender}</span>`;
+                tabLi.className = 'active';
+                tabLi.setAttribute('data-tab-id', msgSender);
+                tabs.appendChild(tabLi);
+
+                // private chat log container
+                var div = document.createElement('div');
+                div.classList.add('content');
+                div.classList.add('active');
+                div.id = msgSender;
+
+                // private chat log 
+                var ul = document.createElement('UL');
+                ul.id = msgSender + '_logs';
+                var chatLi = document.createElement('LI');
+                chatLi.innerHTML = `<span>${msg}</span>`;
+                ul.appendChild(chatLi);
+                div.appendChild(ul);
+
+                tabContent.appendChild(div);
+                return false;
+
+            } else {
+                // create new private message tab 
+                var tabLi = document.createElement('LI');
+                tabLi.innerHTML = `<span>@ ${msgSender}</span>`;
+                tabLi.className = 'active';
+                tabLi.setAttribute('data-tab-id', msgSender);
+                tabs.appendChild(tabLi);
+
+                // private chat log container
+                var div = document.createElement('div');
+                div.classList.add('content');
+                div.classList.add('active');
+                div.id = msgSender;
+
+                // private chat log 
+                var ul = document.createElement('UL');
+                ul.id = msgSender + '_logs';
+                var chatLi = document.createElement('LI');
+                chatLi.innerHTML = `<span>${msg}</span>`;
+                ul.appendChild(chatLi);
+                div.appendChild(ul);
+
+                tabContent.appendChild(div);
+            }
+        }
+
+
         // initialize sockets  
         var socket = io();
         socket.on('connect', function () {
@@ -318,6 +397,9 @@
             usernameForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 socket.emit('newuser', usernameInput.value);
+                userName = usernameInput.value;
+                nameTag.innerText = `Hello, ${userName}.`;
+                document.title = 'Socket.IO chatroom - ' + usernameInput.value;
                 usernameModal.style.display = 'none';
                 usernameInput.value = '';
             });
@@ -353,61 +435,9 @@
                 privatemessageInput.value = '';
             });
 
+            // { data.sender, data.message }
             socket.on('privateMessage', function (data) {
-                var x = data.sender + ': ' + data.message;
-
-                // search through tabs for this specific chat 
-                var tabItems = document.querySelectorAll('#tabs li');
-
-                if (tabItems.length === 1) {
-                    // tab lis 
-                    var tabLi = document.createElement('LI');
-                    tabLi.innerHTML = data.sender;
-                    //   tabLi.className = 'active';
-                    tabLi.setAttribute('data-tab-id', data.sender);
-                    tabs.appendChild(tabLi);
-
-                    // tab content section
-                    var div = document.createElement('div');
-                    div.classList.add('content');
-                    //  div.classList.add('active');
-                    div.id = data.sender;
-                    div.innerHTML = 'yeah';
-
-                    // var messageUl = document.createElement('ul');
-                    // var msgLi = document.createElement('LI');
-                    // msgLi.innerHTML = x;
-
-                    // messageUl.appendChild(msgLi);
-                    // div.appendChild(messageUl);
-                    tabContent.appendChild(div);
-                    return false;
-                }
-                // generate first tabs 
-                if (tabItems.length === 0) {
-                    // tab lis 
-                    var tabLi = document.createElement('LI');
-                    tabLi.innerHTML = data.sender;
-                    tabLi.className = 'active';
-                    tabLi.setAttribute('data-tab-id', data.sender);
-                    tabs.appendChild(tabLi);
-
-                    // tab content section
-                    var div = document.createElement('div');
-                    div.classList.add('content');
-                    div.classList.add('active');
-                    div.id = data.sender;
-                    div.innerHTML = 'yeah';
-
-                    // var messageUl = document.createElement('ul');
-                    // var msgLi = document.createElement('LI');
-                    // msgLi.innerHTML = x;
-
-                    // messageUl.appendChild(msgLi);
-                    // div.appendChild(messageUl);
-                    tabContent.appendChild(div);
-                    return false;
-                }
+                updatePrivateMessageLog(data);
             });
 
             // user activity 

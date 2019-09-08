@@ -17,11 +17,11 @@ function getActiveUserStats(arr) {
 io.on('connection', function (socket) {
     socket.on('newuser', function (usernameInput) {
 
-        // handle duplicate connections 
+        // // handle duplicate connections 
         // for (var i = 0; i < users.length; i++) {
         //  if (users[i].port === socket.request.connection._peername.port) {
         //         io.emit('duplicateUser');
-        // `}
+        //  }
         // }
 
         // { address: '::1', family: 'IPv6', port: 61604 }
