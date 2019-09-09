@@ -53,6 +53,7 @@ io.on('connection', function (socket) {
             data.sender = socket_data.alias;
             for (var i = 0; i < users.length; i++) {
                 if (users[i].alias === data.alias) {
+                    data.receiver = users[i].alias;
                     io.to(users[i].socket_id).emit('privateMessage', data);
                 }
             }

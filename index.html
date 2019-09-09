@@ -314,44 +314,51 @@
             }, 1000);
         }
 
-        function uniquePairMessageKey() {
-            console.log('yes');
+        function createPrivateChatId(a, b) {
+            var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+            var x = [a, b].sort();
+            x = x[0].concat(x[1]).replace(/ /g, '');
+            return x;
         }
 
         // update private messages. args {}
         function updatePrivateMessageLog(args) {
-            var msgSender = args.sender;
-            var msg = args.message;
+
+
+            // {"alias":"uey","message":"wwe","sender":"oaoaoao","receiver":"uey"}
+            var uniqueChatId = createPrivateChatId(args.sender, args.receiver);
+            alert(uniqueChatId);
+
             // search tabs for unique chat id 
             var tabItems = document.querySelectorAll('#tabs li');
             if (tabItems.length > 0) {
                 for (var i = 0; i < tabItems.length; i++) {
-                    if (tabItems[i].attributes['data-tab-id'].nodeValue === msgSender) {
-                        var log = document.getElementById(msgSender + '_logs');
+                    if (tabItems[i].attributes['data-tab-id'].nodeValue === uniqueChatId) {
+                        var log = document.getElementById(uniqueChatId + '_logs');
                         var li = document.createElement('LI');
-                        li.innerHTML = `<span>${msg}</span>`;
+                        li.innerHTML = `<span>${args.message}</span>`;
                         log.appendChild(li);
                         return false;
                     }
                 }
                 // create new private message tab 
                 var tabLi = document.createElement('LI');
-                tabLi.innerHTML = `<span>@ ${msgSender}</span>`;
+                tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
                 tabLi.className = 'active';
-                tabLi.setAttribute('data-tab-id', msgSender);
+                tabLi.setAttribute('data-tab-id', uniqueChatId);
                 tabs.appendChild(tabLi);
 
                 // private chat log container
                 var div = document.createElement('div');
                 div.classList.add('content');
                 div.classList.add('active');
-                div.id = msgSender;
+                div.id = uniqueChatId;
 
                 // private chat log 
                 var ul = document.createElement('UL');
-                ul.id = msgSender + '_logs';
+                ul.id = uniqueChatId + '_logs';
                 var chatLi = document.createElement('LI');
-                chatLi.innerHTML = `<span>${msg}</span>`;
+                chatLi.innerHTML = `<span>${args.message}</span>`;
                 ul.appendChild(chatLi);
                 div.appendChild(ul);
 
@@ -361,22 +368,22 @@
             } else {
                 // create new private message tab 
                 var tabLi = document.createElement('LI');
-                tabLi.innerHTML = `<span>@ ${msgSender}</span>`;
+                tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
                 tabLi.className = 'active';
-                tabLi.setAttribute('data-tab-id', msgSender);
+                tabLi.setAttribute('data-tab-id', uniqueChatId);
                 tabs.appendChild(tabLi);
 
                 // private chat log container
                 var div = document.createElement('div');
                 div.classList.add('content');
                 div.classList.add('active');
-                div.id = msgSender;
+                div.id = uniqueChatId;
 
                 // private chat log 
                 var ul = document.createElement('UL');
-                ul.id = msgSender + '_logs';
+                ul.id = uniqueChatId + '_logs';
                 var chatLi = document.createElement('LI');
-                chatLi.innerHTML = `<span>${msg}</span>`;
+                chatLi.innerHTML = `<span>${args.message}</span>`;
                 ul.appendChild(chatLi);
                 div.appendChild(ul);
 
@@ -446,7 +453,11 @@
                 userList.innerHTML = '';
                 var list = data.userNameList;
                 for (var i = 0; i < list.length; i++) {
-                    appendLi(list[i], userList);
+                    if (list[i] === userName) {
+                        appendLi(list[i] + (' { current } '), userList);
+                    } else {
+                        appendLi(list[i], userList);
+                    }
                 }
             });
 
