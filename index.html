@@ -207,27 +207,18 @@
         </div>
         <div class='child'>
 
+            <!-- content -->
+
         </div>
 
         <div class='child' id='privateMessages'>
-
-            <!-- private messages -->
-
-            <!-- 
-                https://codepen.io/vlt5/pen/gpNQwK
-            -->
-
             <ul id='tabs' class='tabs'>
                 <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
-                <li data-tab-id='tab2'>tab-2</li>
-                <li data-tab-id='tab3'>tab-3</li>
-                <li data-tab-id='tab4'>tab-4</li> -->
+                <li data-tab-id='tab2'>tab-2</li> -->
             </ul>
             <div id='tabContent' class='content-section'>
                 <!-- <div id='tab1' class='content active'>content-1</div>
-                <div id='tab2' class='content'>content-2</div>
-                <div id='tab3' class='content'>content-3</div>
-                <div id='tab4' class='content'>content-4</div> -->
+                <div id='tab2' class='content'>content-2</div> -->
             </div>
         </div>
     </div>
@@ -261,7 +252,6 @@
         })();   
     </script>
     <script>
-
 
         // globals 
         var nameTag = document.getElementById('nameTag');
@@ -318,77 +308,50 @@
             var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
             var x = [a, b].sort();
             x = x[0].concat(x[1]).replace(/ /g, '');
-            return x;
+            return x
         }
 
-        // update private messages. args {}
+        // update private messages args {}
         function updatePrivateMessageLog(args) {
 
-
-            // {"alias":"uey","message":"wwe","sender":"oaoaoao","receiver":"uey"}
+            // {"alias":"Michael","message":"It's good to hear from you.","sender":"Patty","receiver":"Michael"}
             var uniqueChatId = createPrivateChatId(args.sender, args.receiver);
-            alert(uniqueChatId);
 
             // search tabs for unique chat id 
             var tabItems = document.querySelectorAll('#tabs li');
-            if (tabItems.length > 0) {
-                for (var i = 0; i < tabItems.length; i++) {
-                    if (tabItems[i].attributes['data-tab-id'].nodeValue === uniqueChatId) {
-                        var log = document.getElementById(uniqueChatId + '_logs');
-                        var li = document.createElement('LI');
-                        li.innerHTML = `<span>${args.message}</span>`;
-                        log.appendChild(li);
-                        return false;
-                    }
+
+            for (var i = 0; i < tabItems.length; i++) {
+                if (tabItems[i].attributes['data-tab-id'].nodeValue === uniqueChatId) {
+                    var log = document.getElementById(uniqueChatId + '_logs');
+                    var li = document.createElement('LI');
+                    li.innerHTML = `<span>${args.sender}: ${args.message}</span>`;
+                    log.appendChild(li);
+                    return false;
                 }
-                // create new private message tab 
-                var tabLi = document.createElement('LI');
-                tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
-                tabLi.className = 'active';
-                tabLi.setAttribute('data-tab-id', uniqueChatId);
-                tabs.appendChild(tabLi);
-
-                // private chat log container
-                var div = document.createElement('div');
-                div.classList.add('content');
-                div.classList.add('active');
-                div.id = uniqueChatId;
-
-                // private chat log 
-                var ul = document.createElement('UL');
-                ul.id = uniqueChatId + '_logs';
-                var chatLi = document.createElement('LI');
-                chatLi.innerHTML = `<span>${args.message}</span>`;
-                ul.appendChild(chatLi);
-                div.appendChild(ul);
-
-                tabContent.appendChild(div);
-                return false;
-
-            } else {
-                // create new private message tab 
-                var tabLi = document.createElement('LI');
-                tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
-                tabLi.className = 'active';
-                tabLi.setAttribute('data-tab-id', uniqueChatId);
-                tabs.appendChild(tabLi);
-
-                // private chat log container
-                var div = document.createElement('div');
-                div.classList.add('content');
-                div.classList.add('active');
-                div.id = uniqueChatId;
-
-                // private chat log 
-                var ul = document.createElement('UL');
-                ul.id = uniqueChatId + '_logs';
-                var chatLi = document.createElement('LI');
-                chatLi.innerHTML = `<span>${args.message}</span>`;
-                ul.appendChild(chatLi);
-                div.appendChild(ul);
-
-                tabContent.appendChild(div);
             }
+
+            // create new private message tab 
+            var tabLi = document.createElement('LI');
+            tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
+            tabLi.className = 'active';
+            tabLi.setAttribute('data-tab-id', uniqueChatId);
+            tabs.appendChild(tabLi);
+
+            // private chat log container
+            var div = document.createElement('div');
+            div.classList.add('content');
+            div.classList.add('active');
+            div.id = uniqueChatId;
+
+            // private chat log 
+            var ul = document.createElement('UL');
+            ul.id = uniqueChatId + '_logs';
+            var chatLi = document.createElement('LI');
+            chatLi.innerHTML = `<span>${args.sender}: ${args.message}</span>`;
+
+            ul.appendChild(chatLi);
+            div.appendChild(ul);
+            tabContent.appendChild(div);
         }
 
 
@@ -437,6 +400,12 @@
                 socket.emit('private message', {
                     alias: messageTargetAlias,
                     message: privatemessageInput.value
+                }); // update sender client  
+                updatePrivateMessageLog({
+                    alias: messageTargetAlias,
+                    message: privatemessageInput.value,
+                    sender: userName,
+                    receiver: messageTargetAlias
                 });
                 privatemessageModal.style.display = 'none';
                 privatemessageInput.value = '';
