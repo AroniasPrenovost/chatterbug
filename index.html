@@ -333,14 +333,14 @@
             // create new private message tab 
             var tabLi = document.createElement('LI');
             tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
-            tabLi.className = 'active';
+            if (tabItems.length < 1) tabLi.className = 'active';
             tabLi.setAttribute('data-tab-id', uniqueChatId);
             tabs.appendChild(tabLi);
 
             // private chat log container
             var div = document.createElement('div');
             div.classList.add('content');
-            div.classList.add('active');
+            if (tabItems.length < 1) div.classList.add('active');
             div.id = uniqueChatId;
 
             // private chat log 
