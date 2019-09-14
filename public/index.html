@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Socket.IO chatroom</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6fa;
+        }
+
+        .container {
+            width: 100vw;
+            background: #dcdde1;
+        }
+
+        .child {
+            float: left;
+            width: 50%;
+            height: 50vh;
+            position: relative;
+            background: #ecf0f1;
+        }
+
+        .child:nth-child(2) {
+            background: #b4d2ba;
+        }
+
+        .child:nth-child(3) {
+            background: none;
+        }
+
+        #modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            height: 100%;
+            width: 100%;
+        }
+
+        #privatemessageModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            height: 100%;
+            width: 100%;
+        }
+
+        .modalcontent {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            width: 40%;
+            padding: 45px;
+        }
+
+        form#chatMessageForm {
+            padding: 3px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        form#chatMessageForm input {
+            border: 0;
+            padding: 10px;
+            width: 90%;
+            margin-right: .5%;
+        }
+
+        form#chatMessageForm button {
+            width: 9%;
+            background: rgb(130, 224, 255);
+            border: none;
+            padding: 10px;
+        }
+
+        #messages,
+        #userList {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #messages li {
+            padding: 5px 10px;
+        }
+
+
+        /* private message li */
+        li.active {
+            border: 1px solid #ccc;
+            border-bottom: none;
+        }
+
+        .content {
+            display: none;
+            opacity: 0;
+            border: 1px solid #ccc;
+            width: 200px;
+            height: 100px;
+
+            -webkit-animation: display-none-transition 1s ease;
+            animation: display-none-transition 1s ease;
+        }
+
+        @keyframes display-none-transition {
+            0% {
+                display: none;
+                opacity: 0;
+            }
+
+            1% {
+                display: block;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @-webkit-keyframes display-none-transition {
+            0% {
+                display: none;
+                opacity: 0;
+            }
+
+            1% {
+                display: block;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .content-section .active {
+            display: block;
+            opacity: 1;
+        }
+
+        #tabs ul {
+            margin-bottom: 10px;
+            padding: 0;
+        }
+
+        #tabs li {
+            list-style: none;
+            display: inline-block;
+            width: 50px;
+            margin-right: -4px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='modal'>
+        <div class='modalcontent'>
+            <h2>Please enter a username</h2>
+            <form id='usernameForm' action=''>
+                <input id='usernameInput' autocomplete='off' /><button>Create Username</button>
+            </form>
+        </div>
+    </div>
+    <div id='privatemessageModal'>
+        <div class='modalcontent'>
+            <h2>Send message to: </h2>
+            <form id='privatemessageForm' action=''>
+                <input id='privatemessageInput' autocomplete='off' /><button>Send</button>
+            </form>
+        </div>
+    </div>
+    <div class='container'>
+        <h4 id='nameTag'></h4>
+        <div class='child'>
+            <ul id='messages'>
+
+                <!-- chats -->
+
+            </ul>
+            <form id='chatMessageForm' action=''>
+                <input id='message' autocomplete='off' /><button>Send</button>
+            </form>
+        </div>
+        <div class='child'>
+            <p>Active users: <span id='userCount'></span></p>
+            <ul id='userList'>
+
+                <!-- active users -->
+
+            </ul>
+        </div>
+        <div class='child'>
+
+            <!-- content -->
+
+        </div>
+
+        <div class='child' id='privateMessages'>
+            <ul id='tabs' class='tabs'>
+                <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+                <li data-tab-id='tab2'>tab-2</li> -->
+            </ul>
+            <div id='tabContent' class='content-section'>
+                <!-- <div id='tab1' class='content active'>content-1</div>
+                <div id='tab2' class='content'>content-2</div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src='/socket.io/socket.io.js'></script>
+</body>
+
+</html>

@@ -431,7 +431,9 @@
             });
 
             socket.on('userJoined', function (data) {
-                appendLi(data, messages);
+                if (!data.includes(userName)) {
+                    appendLi(data, messages);
+                }
             });
 
             socket.on('userLeft', function (data) {
