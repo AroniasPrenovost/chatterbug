@@ -22,10 +22,16 @@
         <div class='chatFormContainer'>
             <form id='chatMessageForm' action=''>
                 <ul id='editor'>
-                    <li><i class="fa fa-upload fa-1x"></i></li>
-                    <li><i class="fa fa-image fa-1x"></i></li>
-                    <li><i class="fa fa-microphone fa-1x"></i></li>
-                    <li><i class="fa fa-code fa-1x"></i></li>
+                    <li>
+                        <div class='image-upload'>
+                            <label for='file-input'>
+                                <i class='fa fa-image fa-1x'></i>
+                            </label>
+                            <input id='file-input' type='file' />
+                        </div>
+                    </li>
+                    <li><i class='fa fa-microphone fa-1x'></i></li>
+                    <li><i class='fa fa-code fa-1x'></i></li>
                 </ul>
                 <textarea id='message'>
                 </textarea>
