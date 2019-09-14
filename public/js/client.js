@@ -1,30 +1,26 @@
+// private message tabs 
 
-
-
-// private message ui code 
-(function () {
-    var d = document,
-        tabs = d.querySelector('.tabs'),
-        tab = d.querySelectorAll('li'),
-        contents = d.querySelectorAll('.content');
-    tabs.addEventListener('click', function (e) {
-        if (e.target && e.target.nodeName === 'LI') {
-            // change tabs
-            for (var i = 0; i < tab.length; i++) {
-                tab[i].classList.remove('active');
-            }
-            e.target.classList.toggle('active');
-
-            // change content
-            for (i = 0; i < contents.length; i++) {
-                contents[i].classList.remove('active');
-            }
-
-            var tabId = '#' + e.target.dataset.tabId;
-            d.querySelector(tabId).classList.toggle('active');
+var d = document,
+    tabs = d.querySelector('.tabs'),
+    tab = d.querySelectorAll('li'),
+    contents = d.querySelectorAll('.content');
+tabs.addEventListener('click', function (e) {
+    if (e.target && e.target.nodeName === 'LI') {
+        // change tabs
+        for (var i = 0; i < tab.length; i++) {
+            tab[i].classList.remove('active');
         }
-    });
-})();
+        e.target.classList.toggle('active');
+
+        // change content
+        for (i = 0; i < contents.length; i++) {
+            contents[i].classList.remove('active');
+        }
+
+        var tabId = '#' + e.target.dataset.tabId;
+        d.querySelector(tabId).classList.toggle('active');
+    }
+});
 
 
 // globals 
@@ -91,7 +87,7 @@ function updatePrivateMessageLog(args) {
     // {"alias":"Michael","message":"It's good to hear from you.","sender":"Patty","receiver":"Michael"}
     var uniqueChatId = createPrivateChatId(args.sender, args.receiver);
 
-    // search tabs for unique chat id
+    // search tabs for unique chat id 
     var tabItems = document.querySelectorAll('#tabs li');
 
     for (var i = 0; i < tabItems.length; i++) {
@@ -104,7 +100,7 @@ function updatePrivateMessageLog(args) {
         }
     }
 
-    // create new private message tab
+    // create new private message tab 
     var tabLi = document.createElement('LI');
     tabLi.innerHTML = `<span>From: ${args.sender}</span>`;
     if (tabItems.length < 1) tabLi.className = 'active';
@@ -117,7 +113,7 @@ function updatePrivateMessageLog(args) {
     if (tabItems.length < 1) div.classList.add('active');
     div.id = uniqueChatId;
 
-    // private chat log
+    // private chat log 
     var ul = document.createElement('UL');
     ul.id = uniqueChatId + '_logs';
     var chatLi = document.createElement('LI');
@@ -129,7 +125,7 @@ function updatePrivateMessageLog(args) {
 }
 
 
-// initialize sockets
+// initialize sockets  
 var socket = io();
 socket.on('connect', function () {
 
@@ -159,7 +155,7 @@ socket.on('connect', function () {
         appendLi(msg, messages);
     });
 
-    // private message
+    // private message 
     var messageTargetAlias;
     userList.addEventListener('click', function (e) {
         privatemessageModal.style.display = 'block';
@@ -174,7 +170,7 @@ socket.on('connect', function () {
         socket.emit('private message', {
             alias: messageTargetAlias,
             message: privatemessageInput.value
-        }); // update sender client
+        }); // update sender client  
         updatePrivateMessageLog({
             alias: messageTargetAlias,
             message: privatemessageInput.value,
@@ -185,12 +181,12 @@ socket.on('connect', function () {
         privatemessageInput.value = '';
     });
 
-    // {data.sender, data.message }
+    // { data.sender, data.message }
     socket.on('privateMessage', function (data) {
         updatePrivateMessageLog(data);
     });
 
-    // user activity
+    // user activity 
     socket.on('userCount', function (data) {
         userTally.innerText = data.userCount;
         userList.innerHTML = '';
@@ -214,7 +210,7 @@ socket.on('connect', function () {
         appendLi(data, messages);
     });
 
-    // notify room when a user is typing
+    // notify room when a user is typing 
     var timeout;
     function timeoutFunction() {
         typing = false;
