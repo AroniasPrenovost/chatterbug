@@ -148,6 +148,16 @@ li.active {
     opacity: 1;
 }
 
+#editor {
+    width:100%;
+    position: relative;
+}
+
+#editor li {
+    list-style: none;
+    display: inline-block;
+}
+
 #tabs ul {
     margin-bottom: 10px;
     padding: 0;

@@ -6,6 +6,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' href='/css/style.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
 </head>
 
 <body>
@@ -18,9 +19,14 @@
                 </ul>
             </div>
         </div>
-
         <div class='chatFormContainer'>
             <form id='chatMessageForm' action=''>
+                <ul id='editor'>
+                    <li><i class="fa fa-upload fa-1x"></i></li>
+                    <li><i class="fa fa-image fa-1x"></i></li>
+                    <li><i class="fa fa-microphone fa-1x"></i></li>
+                    <li><i class="fa fa-code fa-1x"></i></li>
+                </ul>
                 <textarea id='message'>
                 </textarea>
                 <br><button style='float:right'>Send</button>
@@ -36,7 +42,6 @@
                     <!-- active users -->
 
                 </ul>
-
                 <br>
                 <div id='privateMessages'>
                     <ul id='tabs' class='tabs'>
