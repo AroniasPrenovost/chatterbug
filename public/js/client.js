@@ -138,7 +138,7 @@ socket.on('connect', function () {
         e.preventDefault();
         socket.emit('newuser', usernameInput.value);
         userName = usernameInput.value;
-        nameTag.innerText = `Hello, ${userName}.`;
+        nameTag.innerText = `Username: ${userName}.`;
         document.title = 'Socket.IO chatroom - ' + usernameInput.value;
         usernameModal.style.display = 'none';
         usernameInput.value = '';
@@ -193,7 +193,7 @@ socket.on('connect', function () {
         var list = data.userNameList;
         for (var i = 0; i < list.length; i++) {
             if (list[i] === userName) {
-                appendLi(list[i] + (' { current } '), userList);
+                appendLi(list[i] + (' { you } '), userList);
             } else {
                 appendLi(list[i], userList);
             }

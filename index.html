@@ -3,10 +3,55 @@
 
 <head>
     <title>Socket.IO chatroom</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' href='/css/style.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'>
 </head>
 
 <body>
+
+    <div class='columnsContainer'>
+        <div class='leftColumn'>
+            <div class='columnInterior'>
+                <ul id='messages'>
+                    <!-- chats -->
+                </ul>
+            </div>
+        </div>
+
+        <div class='chatFormContainer'>
+            <form id='chatMessageForm' action=''>
+                <textarea id='message'>
+                </textarea>
+                <br><button style='float:right'>Send</button>
+            </form>
+        </div>
+
+        <div class="rightColumn">
+            <div class='columnInterior'>
+                <h4 id='nameTag'></h4>
+                <p>Active users: <span id='userCount'></span></p>
+                <ul id='userList'>
+
+                    <!-- active users -->
+
+                </ul>
+
+                <br>
+                <div id='privateMessages'>
+                    <ul id='tabs' class='tabs'>
+                        <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+                        <li data-tab-id='tab2'>tab-2</li> -->
+                    </ul>
+                    <div id='tabContent' class='content-section'>
+                        <!-- <div id='tab1' class='content active'>content-1</div>
+                        <div id='tab2' class='content'>content-2</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id='modal'>
         <div class='modalcontent'>
             <h2>Please enter a username</h2>
@@ -15,49 +60,13 @@
             </form>
         </div>
     </div>
+
     <div id='privatemessageModal'>
         <div class='modalcontent'>
             <h2>Send message to: </h2>
             <form id='privatemessageForm' action=''>
                 <input id='privatemessageInput' autocomplete='off' /><button>Send</button>
             </form>
-        </div>
-    </div>
-    <div class='container'>
-        <h4 id='nameTag'></h4>
-        <div class='child'>
-            <ul id='messages'>
-
-                <!-- chats -->
-
-            </ul>
-            <form id='chatMessageForm' action=''>
-                <input id='message' autocomplete='off' /><button>Send</button>
-            </form>
-        </div>
-        <div class='child'>
-            <p>Active users: <span id='userCount'></span></p>
-            <ul id='userList'>
-
-                <!-- active users -->
-
-            </ul>
-        </div>
-        <div class='child'>
-
-            <!-- content -->
-
-        </div>
-
-        <div class='child' id='privateMessages'>
-            <ul id='tabs' class='tabs'>
-                <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
-                <li data-tab-id='tab2'>tab-2</li> -->
-            </ul>
-            <div id='tabContent' class='content-section'>
-                <!-- <div id='tab1' class='content active'>content-1</div>
-                <div id='tab2' class='content'>content-2</div> -->
-            </div>
         </div>
     </div>
 
