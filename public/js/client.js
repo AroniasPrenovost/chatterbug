@@ -49,6 +49,12 @@ var userList = document.getElementById('userList');
 function appendLi(str, e) {
     var li = document.createElement('LI');
     var msgNode = document.createTextNode(str);
+    if (e.id === 'messages') {
+        var img = document.createElement('IMG');
+        img.className = 'avatar';
+        img.src = 'https://o.aolcdn.com/images/dims?quality=85&image_uri=http%3A%2F%2Fo.aolcdn.com%2Fhss%2Fstorage%2Fmidas%2F435cb131770743748354d25c1a3823c5%2F206697768%2Fcarmack-ed.jpg&client=amp-blogside-v2&signature=c231e2d87f936926eab52654ebeaad997d2c2e86';
+        li.appendChild(img);
+    }
     li.appendChild(msgNode);
     e.appendChild(li);
 }
@@ -84,7 +90,7 @@ function createPrivateChatId(a, b) {
 // update private messages args {}
 function updatePrivateMessageLog(args) {
 
-    // {"alias":"Michael","message":"It's good to hear from you.","sender":"Patty","receiver":"Michael"}
+    // {'alias':'Michael','message':'It's good to hear from you.','sender':'Patty','receiver':'Michael'}
     var uniqueChatId = createPrivateChatId(args.sender, args.receiver);
 
     // search tabs for unique chat id 

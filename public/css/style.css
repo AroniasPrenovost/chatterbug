@@ -192,3 +192,8 @@ li.active {
     width: 40%;
     padding: 45px;
 }
+
+img.avatar {
+    height:12px; 
+    width:12px;
+}
