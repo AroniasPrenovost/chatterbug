@@ -27,6 +27,7 @@ body {
     border: 1px solid #ced6e0;
     height:85vh;
     background: #ffffff;
+    overflow: scroll;
 }
 
 .leftColumn {
@@ -113,6 +114,8 @@ form#chatMessageForm button {
     width: 100%;
     margin: 0;
     padding: 0;
+    overflow-y: auto;
+  
 }
 
 #messages li,
@@ -120,6 +123,7 @@ form#chatMessageForm button {
     width: 100%;
     display: inline-block; 
     list-style-type: none; 
+   
 }
 
 /* private message li */

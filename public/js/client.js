@@ -45,6 +45,13 @@ var chatmessageInput = document.getElementById('message');
 var userTally = document.getElementById('userCount');
 var userList = document.getElementById('userList');
 
+
+// fix chat log overflow scroll to bottom 
+function fixScrollToBottom(str) {
+    var e = document.querySelector('.' + str);
+    e.scrollTop = e.scrollHeight - e.clientHeight;
+}
+
 // flags: 'time', 'other', 'self', 'userlist'
 function appendLi(str, e, flag) {
     var li = document.createElement('LI');
@@ -81,6 +88,7 @@ function appendLi(str, e, flag) {
 
     li.appendChild(div);
     e.appendChild(li);
+    fixScrollToBottom('leftColumn');
 }
 
 function formatDate(date) {
