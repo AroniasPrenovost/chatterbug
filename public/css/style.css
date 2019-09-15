@@ -225,14 +225,17 @@ img.avatar {
 
 
 /* chat list items */ 
-.timeChatLi {
+.genericChatLi,
+.isTypingLi {
     text-align: center;
     color: #535c68;
     opacity: .7;
 }
-/* 
- #cfecd0, #a0cea7, #9ec0db
-*/
+
+.isTypingLi {
+    text-align: left;
+}
+
 .otherChatLi {
     color: black; 
     float:left;
@@ -251,6 +254,3 @@ img.avatar {
     color: black;
 }
 
-.genericChatLi {
-     color: magenta; 
-}

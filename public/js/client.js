@@ -51,10 +51,8 @@ function appendLi(str, e, flag) {
     var msgNode = document.createTextNode(str);
     var div = document.createElement('DIV');
     div.appendChild(msgNode);
+
     switch (flag) {
-        case 'time':
-            div.classList.add('timeChatLi');
-            break;
         case 'other':
             div.classList.add('otherChatLi');
             break;
@@ -63,6 +61,12 @@ function appendLi(str, e, flag) {
             break;
         case 'userlist':
             div.classList.add('userListLi');
+            break;
+        case 'generic':
+            div.classList.add('genericChatLi');
+            break;
+        case 'typing':
+            div.classList.add('isTypingLi');
             break;
         default:
             div.classList.add('genericChatLi');
@@ -108,9 +112,13 @@ function removeIsTypingDuplicates(str) {
 function removeTrailingTyping() {
     setTimeout(function () {
         var listItems = document.querySelectorAll('#messages li');
-        var lastItem = listItems[listItems.length - 1];
-        if (lastItem.textContent.includes('is typing...')) {
-            lastItem.parentNode.removeChild(lastItem);
+        var index = 1;
+        var len = (listItems.length / 2) + 1;
+        for (var i = 0; i < len; i++) {
+            var lastItem = listItems[listItems.length - index];
+            if (lastItem.childNodes[0].innerText.includes('is typing...')) {
+                lastItem.parentNode.removeChild(lastItem);
+            } else { index++ }
         }
     }, 1000);
 }
@@ -175,7 +183,7 @@ socket.on('connect', function () {
     // });
 
     // add timestamp somewhere in chatlog 
-    // appendLi(formatDate(new Date()), messages, 'time');
+    // appendLi(formatDate(new Date()), messages, 'generic');
 
     // set username
     usernameForm.addEventListener('submit', function (e) {
@@ -274,7 +282,7 @@ socket.on('connect', function () {
 
     socket.on('typing', function (data) {
         if (data && !data.includes('is false')) {
-            appendLi(data, messages);
+            appendLi(data, messages, 'typing');
             removeIsTypingDuplicates(data);
         }
         removeTrailingTyping();
