@@ -22,7 +22,6 @@ tabs.addEventListener('click', function (e) {
     }
 });
 
-
 // globals 
 var nameTag = document.getElementById('nameTag');
 var usernameModal = document.getElementById('modal');
@@ -46,17 +45,53 @@ var chatmessageInput = document.getElementById('message');
 var userTally = document.getElementById('userCount');
 var userList = document.getElementById('userList');
 
-function appendLi(str, e) {
+// flags: 'time', 'other', 'self', 'userlist'
+function appendLi(str, e, flag) {
     var li = document.createElement('LI');
     var msgNode = document.createTextNode(str);
-    if (e.id === 'messages') {
-        var img = document.createElement('IMG');
-        img.className = 'avatar';
-        img.src = 'https://o.aolcdn.com/images/dims?quality=85&image_uri=http%3A%2F%2Fo.aolcdn.com%2Fhss%2Fstorage%2Fmidas%2F435cb131770743748354d25c1a3823c5%2F206697768%2Fcarmack-ed.jpg&client=amp-blogside-v2&signature=c231e2d87f936926eab52654ebeaad997d2c2e86';
-        li.appendChild(img);
+    var div = document.createElement('DIV');
+    div.appendChild(msgNode);
+    switch (flag) {
+        case 'time':
+            div.classList.add('timeChatLi');
+            break;
+        case 'other':
+            div.classList.add('otherChatLi');
+            break;
+        case 'self':
+            div.classList.add('selfChatLi');
+            break;
+        case 'userlist':
+            div.classList.add('userListLi');
+            break;
+        default:
+            div.classList.add('genericChatLi');
     }
-    li.appendChild(msgNode);
+    // if (e.id === 'messages') {
+    //     var img = document.createElement('IMG');
+    //     img.className = 'avatar';
+    //     img.src = 'https://o.aolcdn.com/images/dims?quality=85&image_uri=http%3A%2F%2Fo.aolcdn.com%2Fhss%2Fstorage%2Fmidas%2F435cb131770743748354d25c1a3823c5%2F206697768%2Fcarmack-ed.jpg&client=amp-blogside-v2&signature=c231e2d87f936926eab52654ebeaad997d2c2e86';
+    //     li.appendChild(img);
+    // }
+
+
+    li.appendChild(div);
     e.appendChild(li);
+}
+
+function formatDate(date) {
+    var monthNames = [
+        'January', 'February', 'March',
+        'April', 'May', 'June', 'July',
+        'August', 'September', 'October',
+        'November', 'December'
+    ];
+
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+
+    return monthNames[monthIndex] + ' ' + day + ', ' + year;
 }
 
 function removeIsTypingDuplicates(str) {
@@ -84,7 +119,7 @@ function createPrivateChatId(a, b) {
     var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
     var x = [a, b].sort();
     x = x[0].concat(x[1]).replace(/ /g, '');
-    return x
+    return x;
 }
 
 // update private messages args {}
@@ -139,6 +174,9 @@ socket.on('connect', function () {
     //     socket.disconnect();
     // });
 
+    // add timestamp somewhere in chatlog 
+    // appendLi(formatDate(new Date()), messages, 'time');
+
     // set username
     usernameForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -158,7 +196,11 @@ socket.on('connect', function () {
     });
 
     socket.on('chatMessage', function (msg) {
-        appendLi(msg, messages);
+        if (!msg.includes(userName)) {
+            appendLi(msg, messages, 'other');
+        } else {
+            appendLi(msg, messages, 'self');
+        }
     });
 
     // private message 
@@ -199,9 +241,9 @@ socket.on('connect', function () {
         var list = data.userNameList;
         for (var i = 0; i < list.length; i++) {
             if (list[i] === userName) {
-                appendLi(list[i] + (' { you } '), userList);
+                appendLi(list[i] + (' { you } '), userList, 'userlist');
             } else {
-                appendLi(list[i], userList);
+                appendLi(list[i], userList, 'userlist');
             }
         }
     });
