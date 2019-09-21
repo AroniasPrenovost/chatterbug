@@ -33,8 +33,7 @@
                     <li><i class='fa fa-microphone fa-1x'></i></li>
                     <li><i class='fa fa-code fa-1x'></i></li>
                 </ul>
-                <textarea id='message' rows='4' value=''>
-                </textarea>
+                <input id='message' rows='4' value='' />
                 <br><button style='float:right'>Send</button>
             </form>
         </div>
@@ -81,7 +80,8 @@
         </div>
     </div>
 
-
+    <canvas style='border: 2x solid red;background-color: #f2f2f2 !important' id="drawing"></canvas>
+    <button id='btn'>click to clear</button>
 
     <script src='/socket.io/socket.io.js'></script>
     <script src='/js/client.js'></script>

@@ -89,11 +89,11 @@ form#chatMessageForm {
     padding: 2px;
 }   
 
-textarea {
+/* textarea {
     resize: none;
-}
+} */
 
-form#chatMessageForm textarea {
+form#chatMessageForm input {
     width: 100%;
     height: auto;
     position: relative;
@@ -258,3 +258,6 @@ img.avatar {
     color: black;
 }
 
+#canvas {
+    display: block;
+ }

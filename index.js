@@ -17,6 +17,9 @@ function getActiveUserStats(arr) {
     return userNames;
 }
 
+// array of all lines drawn
+var lineHistory = [];
+
 io.on('connection', function (socket) {
     socket.on('newuser', function (usernameInput) {
 
@@ -26,6 +29,27 @@ io.on('connection', function (socket) {
         //         io.emit('duplicateUser');
         //  }
         // }
+
+        // draw 
+
+        // first send the history to the new client
+        for (var i in lineHistory) {
+            socket.emit('drawLine', { line: lineHistory[i] });
+        }
+
+        // add handler for message type "drawLine".
+        socket.on('drawLine', function (data) {
+            // add received line to history 
+            lineHistory.push(data.line);
+            // send line to all clients
+            io.emit('drawLine', { line: data.line });
+        });
+
+        // add handler for clearing a line 
+        socket.on('clearCanvas', function (data) {
+            io.emit('clearCanvas', data);
+        });
+        // end draw 
 
         // { address: '::1', family: 'IPv6', port: 61604 }
         const socket_data = socket.request.connection._peername;
