@@ -14,61 +14,97 @@
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(90deg, #cfecd0, #a0cea7, #9ec0db) !important;
 }
 
 .columnsContainer {
     position: relative;
-    margin: 2em 4.5em;
+    /* margin: 2em 4.5em; */
 }
 
 .leftColumn,
 .rightColumn {
-    border: 1px solid #ced6e0;
-    height:85vh;
-    background: #ffffff;
+    border-left: 1px solid black;
+    height:100vh;
     overflow: scroll;
+    background: none;      
 }
 
-.leftColumn {
-    height:60vh;
+#messages {
+    height: 100%;
 }
 
+
+#messages,
+#userList {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+#messages li,
+#userList li {
+    width: 100%;
+    display: inline-block; 
+    list-style-type: none;   
+}
+
+#messages li {
+    padding: 4px 12px 4px;
+}
+
+/* right column containers */ 
 .columnInterior {
     padding: 1.25em;
+    background: #ece5dd;
+}
+
+.columnInterior:nth-child(1) {
+    height: 7vh;
+    background: #455a64; 
+}
+
+.columnInterior:nth-child(2) {
+    height: 28vh; 
+    border-top: 1px solid black;
+}
+
+/* chat #messages */
+.columnInterior:nth-child(3) {
+    height: 55vh; 
+    width: 100%;
+    border-top: 1px solid black;    
+}
+
+/* chat message input form */
+.columnInterior:nth-child(4) {
+    height: 10vh;
+    width: 100%;
+    bottom:0;
+    border-top: 1px solid black;
+    position: absolute;
 }
 
 /* mobile */
 @media screen and (min-width: 47.5em) {
-    .leftColumn,
-    .chatFormContainer {
-        margin-right: 19.5em;
+    .leftColumn {
+        margin-right: 26.5em;
     }
 
-    .rightColumn {
+    .rightColumn {  
         position: absolute;
         top: 0;
         right: 0;
-        width: 18.75em;
+        width: 26.75em;
     }
 }
-
-.chatFormContainer {
-    border: 1px solid #ced6e0;
-    border-top: none;
-    height:25vh; 
-    position: relative;
-    background: #ffffff;
-}
-    
+     
 form#chatMessageForm {
-    padding: 15px;
-    position: absolute;
-    bottom: 0;
     width: 100%;
+    position: relative;
 }
 
-#editor {
+/* #editor {
     width:100%;
     position: relative;
 }
@@ -87,7 +123,7 @@ form#chatMessageForm {
     display: inline-block;
     font-size: 18px;
     padding: 2px;
-}   
+}    */
 
 /* textarea {
     resize: none;
@@ -101,29 +137,6 @@ form#chatMessageForm input {
     margin:12px 0 12px 0;
     font-size: 12px;
     line-height:1.4;
-}
-
-form#chatMessageForm button {
-    border: 1px solid #ced6e0;
-    background: transparent;
-    padding: 8px;
-}
-
-#messages,
-#userList {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-y: auto;
-  
-}
-
-#messages li,
-#userList li {
-    width: 100%;
-    display: inline-block; 
-    list-style-type: none; 
-   
 }
 
 /* private message li */
@@ -244,14 +257,14 @@ img.avatar {
     color: black; 
     float:left;
     padding:12px;
-    background:  #a0cea7;
+    background: #ffffff;
 }
 
 .selfChatLi {
     color: black;
     float: right;
     padding:12px;
-    background: #9ec0db;
+    background: #dcf8c6;       
 }
 
 .userListLi {

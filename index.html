@@ -13,51 +13,55 @@
 
     <div class='columnsContainer'>
         <div class='leftColumn'>
+            <!-- canvas container -->
+        </div>
+
+        <div class="rightColumn">
+            <div class='columnInterior'>
+                <p style='display:inline-block; color: #ece5dd' id='nameTag'></p>
+                <p style='display:inline-block; color: #ece5dd; float:right' id='userCount'></p>
+            </div>
+            <div class='columnInterior'>
+                <ul id='userList'>
+                    <!-- active users -->
+                </ul>
+                <br>
+
+                <div id='privateMessages'>
+                    <ul id='tabs' class='tabs'>
+                        <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+                                <li data-tab-id='tab2'>tab-2</li> -->
+                    </ul>
+                    <div id='tabContent' class='content-section'>
+                        <!-- <div id='tab1' class='content active'>content-1</div>
+                                <div id='tab2' class='content'>content-2</div> -->
+                    </div>
+                </div>
+                <!-- <div class='videoChatContainer'>
+            
+               </div> -->
+            </div>
             <div class='columnInterior'>
                 <ul id='messages'>
                     <!-- chats -->
                 </ul>
             </div>
-        </div>
-        <div class='chatFormContainer'>
-            <form id='chatMessageForm' action=''>
-                <ul id='editor'>
-                    <li>
-                        <div class='image-upload'>
-                            <label for='file-input'>
-                                <i class='fa fa-image fa-1x'></i>
-                            </label>
-                            <input id='file-input' type='file' />
-                        </div>
-                    </li>
-                    <li><i class='fa fa-microphone fa-1x'></i></li>
-                    <li><i class='fa fa-code fa-1x'></i></li>
-                </ul>
-                <input id='message' rows='4' value='' />
-                <br><button style='float:right'>Send</button>
-            </form>
-        </div>
-
-        <div class="rightColumn">
             <div class='columnInterior'>
-                <h4 id='nameTag'></h4>
-                <p>Active users: <span id='userCount'></span></p>
-                <ul id='userList'>
-
-                    <!-- active users -->
-
-                </ul>
-                <br>
-                <div id='privateMessages'>
-                    <ul id='tabs' class='tabs'>
-                        <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
-                        <li data-tab-id='tab2'>tab-2</li> -->
-                    </ul>
-                    <div id='tabContent' class='content-section'>
-                        <!-- <div id='tab1' class='content active'>content-1</div>
-                        <div id='tab2' class='content'>content-2</div> -->
-                    </div>
-                </div>
+                <form id='chatMessageForm' action=''>
+                    <!-- <ul id='editor'>
+                                <li>
+                                    <div class='image-upload'>
+                                        <label for='file-input'>
+                                            <i class='fa fa-image fa-1x'></i>
+                                        </label>
+                                        <input id='file-input' type='file' />
+                                    </div>
+                                </li>
+                                <li><i class='fa fa-microphone fa-1x'></i></li>
+                                <li><i class='fa fa-code fa-1x'></i></li>
+                            </ul> -->
+                    <input id='message' value='' />
+                </form>
             </div>
         </div>
     </div>
@@ -79,10 +83,9 @@
             </form>
         </div>
     </div>
-
+    <!-- 
     <canvas style='border: 2x solid red;background-color: #f2f2f2 !important' id="drawing"></canvas>
-    <button id='btn'>click to clear</button>
-
+    <button id='btn'>click to clear</button> -->
     <script src='/socket.io/socket.io.js'></script>
     <script src='/js/client.js'></script>
 </body>
