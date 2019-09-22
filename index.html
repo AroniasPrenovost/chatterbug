@@ -13,13 +13,19 @@
 
     <div class='columnsContainer'>
         <div class='leftColumn'>
-            <!-- canvas container -->
+            <div class='columnInterior'>
+                <!-- canvas buttons -->
+                <button id='btn'>click to clear</button>
+            </div>
+            <div class='columnInterior'>
+                <canvas id="drawing"></canvas>
+            </div>
         </div>
 
         <div class="rightColumn">
             <div class='columnInterior'>
-                <p style='display:inline-block; color: #ece5dd' id='nameTag'></p>
-                <p style='display:inline-block; color: #ece5dd; float:right' id='userCount'></p>
+                <p id='nameTag'></p>
+                <p style='float:right' id='userCount'></p>
             </div>
             <div class='columnInterior'>
                 <ul id='userList'>
@@ -83,9 +89,6 @@
             </form>
         </div>
     </div>
-    <!-- 
-    <canvas style='border: 2x solid red;background-color: #f2f2f2 !important' id="drawing"></canvas>
-    <button id='btn'>click to clear</button> -->
     <script src='/socket.io/socket.io.js'></script>
     <script src='/js/client.js'></script>
 </body>

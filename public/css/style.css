@@ -25,14 +25,14 @@ body {
 .rightColumn {
     border-left: 1px solid black;
     height:100vh;
-    overflow: scroll;
+    /* overflow: scroll; */
+    overflow: -moz-hidden-unscrollable;
     background: none;      
 }
 
 #messages {
     height: 100%;
 }
-
 
 #messages,
 #userList {
@@ -57,31 +57,43 @@ body {
 .columnInterior {
     padding: 1.25em;
     background: #ece5dd;
+    border-bottom: 1px solid black;
 }
 
-.columnInterior:nth-child(1) {
+.leftColumn > .columnInterior:nth-child(1) {
+    height: 7vh;
+    background: #455a64; 
+}
+.leftColumn > .columnInterior:nth-child(2) {
+    height: 93vh;
+    background: none; 
+    padding: 0;
+}
+
+.rightColumn > .columnInterior:nth-child(1) {
     height: 7vh;
     background: #455a64; 
 }
 
-.columnInterior:nth-child(2) {
+ .rightColumn > .columnInterior:nth-child(1) p {
+    display:inline-block; color: #ece5dd;
+ }
+
+.rightColumn > .columnInterior:nth-child(2) {
     height: 28vh; 
-    border-top: 1px solid black;
 }
 
 /* chat #messages */
-.columnInterior:nth-child(3) {
+.rightColumn > .columnInterior:nth-child(3) {
     height: 55vh; 
-    width: 100%;
-    border-top: 1px solid black;    
+    width: 100%;    
 }
 
 /* chat message input form */
-.columnInterior:nth-child(4) {
+.rightColumn > .columnInterior:nth-child(4) {
     height: 10vh;
     width: 100%;
     bottom:0;
-    border-top: 1px solid black;
     position: absolute;
 }
 
@@ -273,4 +285,5 @@ img.avatar {
 
 #canvas {
     display: block;
+    position: relative;
  }
