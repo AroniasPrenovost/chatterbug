@@ -63,10 +63,11 @@ body {
 .leftColumn > .columnInterior:nth-child(1) {
     height: 7vh;
     background: #455a64; 
+    color: #ece5dd;
 }
 .leftColumn > .columnInterior:nth-child(2) {
     height: 93vh;
-    background: none; 
+    background:none;    
     padding: 0;
 }
 
@@ -76,7 +77,8 @@ body {
 }
 
  .rightColumn > .columnInterior:nth-child(1) p {
-    display:inline-block; color: #ece5dd;
+    display:inline-block; 
+    color: #ece5dd;
  }
 
 .rightColumn > .columnInterior:nth-child(2) {
@@ -116,7 +118,7 @@ form#chatMessageForm {
     position: relative;
 }
 
-/* #editor {
+#editor {
     width:100%;
     position: relative;
 }
@@ -135,7 +137,7 @@ form#chatMessageForm {
     display: inline-block;
     font-size: 18px;
     padding: 2px;
-}    */
+}    
 
 /* textarea {
     resize: none;

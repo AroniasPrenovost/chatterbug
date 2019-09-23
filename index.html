@@ -15,7 +15,13 @@
         <div class='leftColumn'>
             <div class='columnInterior'>
                 <!-- canvas buttons -->
-                <button id='btn'>click to clear</button>
+
+                <ul id='editor'>
+                    <li>&#x2b;</li> <!-- plus  -->
+                    <li>&#x2212;</li> <!-- minus -->
+                    <li>&#247;</li> <!-- divide -->
+                    <li id='eraser'>&#x2750;</li> <!-- eraser -->
+                </ul>
             </div>
             <div class='columnInterior'>
                 <canvas id="drawing"></canvas>
@@ -54,18 +60,6 @@
             </div>
             <div class='columnInterior'>
                 <form id='chatMessageForm' action=''>
-                    <!-- <ul id='editor'>
-                                <li>
-                                    <div class='image-upload'>
-                                        <label for='file-input'>
-                                            <i class='fa fa-image fa-1x'></i>
-                                        </label>
-                                        <input id='file-input' type='file' />
-                                    </div>
-                                </li>
-                                <li><i class='fa fa-microphone fa-1x'></i></li>
-                                <li><i class='fa fa-code fa-1x'></i></li>
-                            </ul> -->
                     <input id='message' value='' />
                 </form>
             </div>

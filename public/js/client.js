@@ -200,7 +200,7 @@ socket.on('connect', function () {
         pos: { x: 0, y: 0 },
         pos_prev: false
     };
-    var btn = document.getElementById('btn');
+    var btn = document.getElementById('eraser');
     // get canvas element and create context
     var canvas = document.getElementById('drawing');
     var context = canvas.getContext('2d');
