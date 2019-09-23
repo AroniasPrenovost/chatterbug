@@ -23,47 +23,48 @@
                     <li id='eraser'>&#x2750;</li> <!-- eraser -->
                 </ul>
             </div>
-            <div class='columnInterior'>
-                <canvas id="drawing"></canvas>
-            </div>
+            <!-- <div id='test' class='columnInterior'> -->
+            <canvas style='position:absolute' id='drawing'></canvas>
+            <!-- -->
         </div>
+    </div>
 
-        <div class="rightColumn">
-            <div class='columnInterior'>
-                <p id='nameTag'></p>
-                <p style='float:right' id='userCount'></p>
-            </div>
-            <div class='columnInterior'>
-                <ul id='userList'>
-                    <!-- active users -->
-                </ul>
-                <br>
+    <div class="rightColumn">
+        <div class='columnInterior'>
+            <p id='nameTag'></p>
+            <p style='float:right' id='userCount'></p>
+        </div>
+        <div class='columnInterior'>
+            <ul id='userList'>
+                <!-- active users -->
+            </ul>
+            <br>
 
-                <div id='privateMessages'>
-                    <ul id='tabs' class='tabs'>
-                        <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+            <div id='privateMessages'>
+                <ul id='tabs' class='tabs'>
+                    <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
                                 <li data-tab-id='tab2'>tab-2</li> -->
-                    </ul>
-                    <div id='tabContent' class='content-section'>
-                        <!-- <div id='tab1' class='content active'>content-1</div>
+                </ul>
+                <div id='tabContent' class='content-section'>
+                    <!-- <div id='tab1' class='content active'>content-1</div>
                                 <div id='tab2' class='content'>content-2</div> -->
-                    </div>
                 </div>
-                <!-- <div class='videoChatContainer'>
+            </div>
+            <!-- <div class='videoChatContainer'>
             
                </div> -->
-            </div>
-            <div class='columnInterior'>
-                <ul id='messages'>
-                    <!-- chats -->
-                </ul>
-            </div>
-            <div class='columnInterior'>
-                <form id='chatMessageForm' action=''>
-                    <input id='message' value='' />
-                </form>
-            </div>
         </div>
+        <div class='columnInterior'>
+            <ul id='messages'>
+                <!-- chats -->
+            </ul>
+        </div>
+        <div class='columnInterior'>
+            <form id='chatMessageForm' action=''>
+                <input id='message' value='' />
+            </form>
+        </div>
+    </div>
     </div>
 
     <div id='modal'>
