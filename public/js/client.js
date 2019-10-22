@@ -22,6 +22,50 @@ tabs.addEventListener('click', function (e) {
     }
 });
 
+////////////
+// 
+// Match problem generators 
+//
+////////////
+
+function generateRandomNumbers() {
+    var arr = []
+    while (arr.length < 8) {
+        var randomnumber = Math.ceil(Math.random() * 100)
+        if (arr.indexOf(randomnumber) === -1) { arr.push(randomnumber) }
+    }
+    return arr;
+}
+
+
+function addition() {
+    var a = generateRandomNumbers()[0];
+    var b = generateRandomNumbers()[1];
+    var str = '+ _ =';
+    return `${a} ${str} ${b}`;
+}
+
+function subtraction() {
+    var a = generateRandomNumbers()[0];
+    var b = generateRandomNumbers()[1];
+    var str = '- _ =';
+    return `${a} ${str} ${b}`;
+}
+
+function division() {
+    var a = generateRandomNumbers()[0];
+    var b = generateRandomNumbers()[1];
+    return `${a} \/ ${b} =`;
+}
+
+function multiplication() {
+    var a = generateRandomNumbers()[0];
+    var b = generateRandomNumbers()[1];
+    var str = '* _ =';
+    return `${a} ${str} ${b}`;
+}
+
+
 // globals 
 var nameTag = document.getElementById('nameTag');
 var usernameModal = document.getElementById('modal');
@@ -202,6 +246,10 @@ socket.on('connect', function () {
 
     // editor tools 
     var eraseBtn = document.getElementById('eraser');
+    var plusBtn = document.getElementById('plus');
+    var subtractionBtn = document.getElementById('subtraction');
+    var divisionBtn = document.getElementById('division');
+    var multiplicationBtn = document.getElementById('multiplication');
     // var screenshotBtn = document.getElementById('screenshot');
 
     // get canvas element and create context
@@ -226,6 +274,31 @@ socket.on('connect', function () {
 
     // screenshot canvas
     // to do... 
+
+    // draw plys 
+    plusBtn.addEventListener('click', function (e) {
+        context.font = '40px Arial';
+        equation = addition();
+        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    });
+
+    subtractionBtn.addEventListener('click', function (e) {
+        context.font = '40px Arial';
+        equation = subtraction();
+        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    });
+
+    divisionBtn.addEventListener('click', function (e) {
+        context.font = '40px Arial';
+        equation = division();
+        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    });
+
+    multiplicationBtn.addEventListener('click', function (e) {
+        context.font = '40px Arial';
+        equation = multiplication();
+        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    });
 
     // clear canvas 
     eraseBtn.addEventListener('click', function (e) {
