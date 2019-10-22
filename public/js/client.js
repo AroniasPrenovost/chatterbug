@@ -181,7 +181,6 @@ function updatePrivateMessageLog(args) {
     tabContent.appendChild(div);
 }
 
-
 // initialize sockets  
 var socket = io();
 socket.on('connect', function () {
@@ -203,8 +202,7 @@ socket.on('connect', function () {
 
     // editor tools 
     var eraseBtn = document.getElementById('eraser');
-    var screenshotBtn = document.getElementById('screenshot');
-
+    // var screenshotBtn = document.getElementById('screenshot');
 
     // get canvas element and create context
     var canvas = document.getElementById('drawing');
@@ -216,38 +214,29 @@ socket.on('connect', function () {
 
     // register mouse event handlers
     canvas.onmousedown = function (e) { mouse.click = true; };
+
     canvas.onmouseup = function (e) { mouse.click = false; };
 
     canvas.onmousemove = function (e) {
         // normalize mouse position to range 0.0 - 1.0
         mouse.pos.x = e.clientX / width;
-        mouse.pos.y = e.clientY / (height - 0);
+        mouse.pos.y = e.clientY / (height + 75);
         mouse.move = true;
     };
 
     // screenshot canvas
-    // function download() {
-
-    // }
-    screenshotBtn.addEventListener('click', function (e) {
-        //download();
-        // var download = document.getElementById("download");
-        var image = document.getElementById('drawing').toDataURL("image/png")
-            .replace("image/png", "image/octet-stream");
-        screenshotBtn.setAttribute("href", image);
-        screenshotBtn.setAttribute("download", "archive.png");
-    });
+    // to do... 
 
     // clear canvas 
     eraseBtn.addEventListener('click', function (e) {
         socket.emit('clearCanvas');
     });
 
-    socket.on('clearCanvas', function (data) {
+    socket.on('clearCanvas', function () {
         context.clearRect(0, 0, canvas.width, canvas.height);
     });
 
-    // socket data below 
+    // socket data below    
     // draw line received from server
     socket.on('drawLine', function (data) {
         var line = data.line;

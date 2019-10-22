@@ -46,8 +46,8 @@ io.on('connection', function (socket) {
         });
 
         // add handler for clearing a line 
-        socket.on('clearCanvas', function (data) {
-            io.emit('clearCanvas', data);
+        socket.on('clearCanvas', function () {
+            io.emit('clearCanvas');
         });
         // end draw 
 
