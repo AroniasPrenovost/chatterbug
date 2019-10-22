@@ -200,7 +200,12 @@ socket.on('connect', function () {
         pos: { x: 0, y: 0 },
         pos_prev: false
     };
-    var btn = document.getElementById('eraser');
+
+    // editor tools 
+    var eraseBtn = document.getElementById('eraser');
+    var screenshotBtn = document.getElementById('screenshot');
+
+
     // get canvas element and create context
     var canvas = document.getElementById('drawing');
     var context = canvas.getContext('2d');
@@ -220,9 +225,21 @@ socket.on('connect', function () {
         mouse.move = true;
     };
 
+    // screenshot canvas
+    // function download() {
 
-    btn.addEventListener('click', function (e) {
-        // add event listerner 
+    // }
+    screenshotBtn.addEventListener('click', function (e) {
+        //download();
+        // var download = document.getElementById("download");
+        var image = document.getElementById('drawing').toDataURL("image/png")
+            .replace("image/png", "image/octet-stream");
+        screenshotBtn.setAttribute("href", image);
+        screenshotBtn.setAttribute("download", "archive.png");
+    });
+
+    // clear canvas 
+    eraseBtn.addEventListener('click', function (e) {
         socket.emit('clearCanvas');
     });
 
@@ -253,7 +270,6 @@ socket.on('connect', function () {
         setTimeout(mainLoop, 25);
     }
     mainLoop();
-
     // end draw 
 
     // set username
@@ -270,8 +286,10 @@ socket.on('connect', function () {
     // chatroom message 
     chatMessageForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        socket.emit('chat message', chatmessageInput.value);
-        chatmessageInput.value = '';
+        if (chatmessageInput.value) {
+            socket.emit('chat message', chatmessageInput.value);
+            chatmessageInput.value = '';
+        }
     });
 
     socket.on('chatMessage', function (msg) {

@@ -19,13 +19,11 @@
                 <ul id='editor'>
                     <li>&#x2b;</li> <!-- plus  -->
                     <li>&#x2212;</li> <!-- minus -->
-                    <li>&#247;</li> <!-- divide -->
+                    <li id='screenshot'>&#8709;</li> <!-- divide -->
                     <li id='eraser'>&#x2750;</li> <!-- eraser -->
                 </ul>
             </div>
-            <!-- <div id='test' class='columnInterior'> -->
-            <canvas style='position:absolute' id='drawing'></canvas>
-            <!-- -->
+            <canvas style='position:absolute' id='drawing'>Your browser does not support Canvas.</canvas>
         </div>
     </div>
 
@@ -34,26 +32,27 @@
             <p id='nameTag'></p>
             <p style='float:right' id='userCount'></p>
         </div>
-        <div class='columnInterior'>
-            <ul id='userList'>
-                <!-- active users -->
-            </ul>
-            <br>
 
-            <div id='privateMessages'>
-                <ul id='tabs' class='tabs'>
-                    <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
-                                <li data-tab-id='tab2'>tab-2</li> -->
-                </ul>
-                <div id='tabContent' class='content-section'>
-                    <!-- <div id='tab1' class='content active'>content-1</div>
-                                <div id='tab2' class='content'>content-2</div> -->
+        <div class='columnInterior'>
+            <div class='subInterior'>
+                <div id='privateMessages'>
+                    <ul id='tabs' class='tabs'>
+                        <!-- <li class='active' data-tab-id='tab1'>tab-1</li>
+                                                <li data-tab-id='tab2'>tab-2</li> -->
+                    </ul>
+                    <div id='tabContent' class='content-section'>
+                        <!-- <div id='tab1' class='content active'>content-1</div>
+                                                <div id='tab2' class='content'>content-2</div> -->
+                    </div>
                 </div>
             </div>
-            <!-- <div class='videoChatContainer'>
-            
-               </div> -->
+            <div class='subInterior' style='border-right: 1px solid black'>
+                <ul id='userList'>
+                    <!-- active users -->
+                </ul>
+            </div>
         </div>
+
         <div class='columnInterior'>
             <ul id='messages'>
                 <!-- chats -->
@@ -85,6 +84,7 @@
         </div>
     </div>
     <script src='/socket.io/socket.io.js'></script>
+    <script src='http://hongru.github.io/proj/canvas2image/canvas2image.js'></script> <!-- img download-->
     <script src='/js/client.js'></script>
 </body>
 

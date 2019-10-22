@@ -44,10 +44,21 @@ body {
 
 #messages li,
 #userList li {
-    width: 100%;
+    width: 85%;
     display: inline-block; 
     list-style-type: none;   
 }
+
+#userList li .userListLi {
+    transition: color 0.3s linear;
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+ }
+ 
+ .userListLi:hover {
+    color: #1ebea5;
+    cursor: pointer;
+ }
 
 #messages li {
     padding: 4px 12px 4px;
@@ -64,6 +75,12 @@ body {
     height: 7vh;
     background: #455a64; 
     color: #ece5dd;
+}
+
+.subInterior {
+    width:50%;  
+    height:100%; 
+    float:inline-end;
 }
 
 /* canvas */
@@ -126,6 +143,10 @@ form#chatMessageForm {
     position: relative;
 }
 
+#editor:hover {
+    cursor: pointer; 
+}
+
 .image-upload > input {
     display: none;
 }
@@ -140,7 +161,15 @@ form#chatMessageForm {
     display: inline-block;
     font-size: 18px;
     padding: 2px;
-}    
+    transition: color 0.3s linear;
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+}
+
+#editor li:hover {
+    color: #1ebea5;
+    cursor: pointer;
+}
 
 /* textarea {
     resize: none;
