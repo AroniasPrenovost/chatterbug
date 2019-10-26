@@ -30,6 +30,17 @@ io.on('connection', function (socket) {
         //  }
         // }
 
+
+        socket.on('division', function (data) {
+            io.emit('division', data);
+        });
+
+        socket.on('multiplication', function (data) {
+            io.emit('multiplication', data);
+        });
+
+
+
         // draw 
 
         // first send the history to the new client

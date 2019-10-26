@@ -1,71 +1,3 @@
-// private message tabs 
-
-var d = document,
-    tabs = d.querySelector('.tabs'),
-    tab = d.querySelectorAll('li'),
-    contents = d.querySelectorAll('.content');
-tabs.addEventListener('click', function (e) {
-    if (e.target && e.target.nodeName === 'LI') {
-        // change tabs
-        for (var i = 0; i < tab.length; i++) {
-            tab[i].classList.remove('active');
-        }
-        e.target.classList.toggle('active');
-
-        // change content
-        for (i = 0; i < contents.length; i++) {
-            contents[i].classList.remove('active');
-        }
-
-        var tabId = '#' + e.target.dataset.tabId;
-        d.querySelector(tabId).classList.toggle('active');
-    }
-});
-
-////////////
-// 
-// Match problem generators 
-//
-////////////
-
-function generateRandomNumbers() {
-    var arr = []
-    while (arr.length < 8) {
-        var randomnumber = Math.ceil(Math.random() * 100)
-        if (arr.indexOf(randomnumber) === -1) { arr.push(randomnumber) }
-    }
-    return arr;
-}
-
-
-function addition() {
-    var a = generateRandomNumbers()[0];
-    var b = generateRandomNumbers()[1];
-    var str = '+ _ =';
-    return `${a} ${str} ${b}`;
-}
-
-function subtraction() {
-    var a = generateRandomNumbers()[0];
-    var b = generateRandomNumbers()[1];
-    var str = '- _ =';
-    return `${a} ${str} ${b}`;
-}
-
-function division() {
-    var a = generateRandomNumbers()[0];
-    var b = generateRandomNumbers()[1];
-    return `${a} \/ ${b} =`;
-}
-
-function multiplication() {
-    var a = generateRandomNumbers()[0];
-    var b = generateRandomNumbers()[1];
-    var str = '* _ =';
-    return `${a} ${str} ${b}`;
-}
-
-
 // globals 
 var nameTag = document.getElementById('nameTag');
 var usernameModal = document.getElementById('modal');
@@ -89,6 +21,105 @@ var chatmessageInput = document.getElementById('message');
 var userTally = document.getElementById('userCount');
 var userList = document.getElementById('userList');
 
+// editor tools 
+var eraseBtn = document.getElementById('eraser');
+var plusBtn = document.getElementById('plus');
+var subtractionBtn = document.getElementById('subtraction');
+var divisionBtn = document.getElementById('division');
+var multiplicationBtn = document.getElementById('multiplication');
+
+// get canvas element and create context
+var canvas = document.getElementById('drawing');
+var context = canvas.getContext('2d');
+var width = window.innerWidth;
+var height = window.innerHeight;
+canvas.width = width;
+canvas.height = height;
+
+////////////
+// 
+// Match problem generators 
+//
+////////////
+
+// args = 'addition', 'subtraction', 'division', 'multiplation'
+// to do: add more 
+
+function generateRandomNumbers() {
+    var arr = []
+    while (arr.length < 8) {
+        var randomnumber = Math.ceil(Math.random() * 100)
+        if (arr.indexOf(randomnumber) === -1) { arr.push(randomnumber) }
+    }
+    return arr;
+}
+
+function generateEquation(str) {
+
+    var a = generateRandomNumbers()[0];
+    var b = generateRandomNumbers()[1];
+    var equation;
+
+    switch (str) {
+        case 'addition':
+            equation = ` ${a}\n+ ${b}`;
+            break;
+        case 'subtraction':
+            equation = ` ${a}\n- ${b}`;
+            break;
+        case 'multiplication':
+            equation = ` ${a}\n* ${b}`;
+            break;
+        case 'division':
+            equation = ` ${b} / ${a} =`;
+            break;
+        default:
+        // 'invalid argument'
+    }
+    return equation;
+}
+
+function drawEquation(args) { // equation = `${b} / ${a}`
+    context.font = '50px';
+    var lineheight = 15;
+    var lines = args.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+        context.fillText(lines[i], (canvas.width / 4), ((canvas.height / 2) + (i * lineheight)));
+    }
+}
+
+function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+////////////
+// 
+// Messaging UI 
+//
+////////////
+
+// private message tabs 
+var d = document,
+    tabs = d.querySelector('.tabs'),
+    tab = d.querySelectorAll('li'),
+    contents = d.querySelectorAll('.content');
+tabs.addEventListener('click', function (e) {
+    if (e.target && e.target.nodeName === 'LI') {
+        // change tabs
+        for (var i = 0; i < tab.length; i++) {
+            tab[i].classList.remove('active');
+        }
+        e.target.classList.toggle('active');
+
+        // change content
+        for (i = 0; i < contents.length; i++) {
+            contents[i].classList.remove('active');
+        }
+
+        var tabId = '#' + e.target.dataset.tabId;
+        d.querySelector(tabId).classList.toggle('active');
+    }
+});
 
 // fix chat log overflow scroll to bottom 
 function fixScrollToBottom(str) {
@@ -122,13 +153,6 @@ function appendLi(str, e, flag) {
         default:
             div.classList.add('genericChatLi');
     }
-    // if (e.id === 'messages') {
-    //     var img = document.createElement('IMG');
-    //     img.className = 'avatar';
-    //     img.src = 'https://o.aolcdn.com/images/dims?quality=85&image_uri=http%3A%2F%2Fo.aolcdn.com%2Fhss%2Fstorage%2Fmidas%2F435cb131770743748354d25c1a3823c5%2F206697768%2Fcarmack-ed.jpg&client=amp-blogside-v2&signature=c231e2d87f936926eab52654ebeaad997d2c2e86';
-    //     li.appendChild(img);
-    // }
-
 
     li.appendChild(div);
     e.appendChild(li);
@@ -236,6 +260,12 @@ socket.on('connect', function () {
     // add timestamp somewhere in chatlog 
     appendLi(formatDate(new Date()), messages, 'generic');
 
+    ////////////
+    // 
+    // Draw tools  
+    //
+    ////////////
+
     // draw
     var mouse = {
         click: false,
@@ -243,22 +273,6 @@ socket.on('connect', function () {
         pos: { x: 0, y: 0 },
         pos_prev: false
     };
-
-    // editor tools 
-    var eraseBtn = document.getElementById('eraser');
-    var plusBtn = document.getElementById('plus');
-    var subtractionBtn = document.getElementById('subtraction');
-    var divisionBtn = document.getElementById('division');
-    var multiplicationBtn = document.getElementById('multiplication');
-    // var screenshotBtn = document.getElementById('screenshot');
-
-    // get canvas element and create context
-    var canvas = document.getElementById('drawing');
-    var context = canvas.getContext('2d');
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
 
     // register mouse event handlers
     canvas.onmousedown = function (e) { mouse.click = true; };
@@ -275,39 +289,35 @@ socket.on('connect', function () {
     // screenshot canvas
     // to do... 
 
-    // draw plys 
-    plusBtn.addEventListener('click', function (e) {
-        context.font = '40px Arial';
-        equation = addition();
-        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    plusBtn.addEventListener('click', function () {
+        var equation = generateEquation(this.id);
+        socket.emit(this.id, equation);
     });
 
-    subtractionBtn.addEventListener('click', function (e) {
-        context.font = '40px Arial';
-        equation = subtraction();
-        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    subtractionBtn.addEventListener('click', function () {
+        var equation = generateEquation(this.id);
+        socket.emit(this.id, equation);
     });
 
-    divisionBtn.addEventListener('click', function (e) {
-        context.font = '40px Arial';
-        equation = division();
-        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    divisionBtn.addEventListener('click', function () {
+        var equation = generateEquation(this.id);
+        socket.emit(this.id, equation);
     });
 
-    multiplicationBtn.addEventListener('click', function (e) {
-        context.font = '40px Arial';
-        equation = multiplication();
-        context.fillText(equation, (canvas.width / 4), (canvas.height / 2));
+    multiplicationBtn.addEventListener('click', function () {
+        var equation = generateEquation(this.id);
+        socket.emit(this.id, equation);
     });
 
-    // clear canvas 
-    eraseBtn.addEventListener('click', function (e) {
+    eraseBtn.addEventListener('click', function () {
         socket.emit('clearCanvas');
     });
 
-    socket.on('clearCanvas', function () {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    });
+    socket.on('addition', function (d) { drawEquation(d) });
+    socket.on('subtraction', function (d) { drawEquation(d) });
+    socket.on('division', function (d) { drawEquation(d) });
+    socket.on('multiplication', function (d) { drawEquation(d) });
+    socket.on('clearCanvas', function () { clearCanvas() });
 
     // socket data below    
     // draw line received from server
@@ -333,6 +343,12 @@ socket.on('connect', function () {
     }
     mainLoop();
     // end draw 
+
+    ////////////
+    // 
+    // Form inputs  
+    //
+    ////////////
 
     // set username
     usernameForm.addEventListener('submit', function (e) {
