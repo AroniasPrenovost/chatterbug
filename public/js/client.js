@@ -23,7 +23,7 @@ var userList = document.getElementById('userList');
 
 // editor tools 
 var eraseBtn = document.getElementById('eraser');
-var plusBtn = document.getElementById('plus');
+var additionBtn = document.getElementById('addition');
 var subtractionBtn = document.getElementById('subtraction');
 var divisionBtn = document.getElementById('division');
 var multiplicationBtn = document.getElementById('multiplication');
@@ -54,24 +54,51 @@ function generateRandomNumbers() {
     return arr;
 }
 
-function generateEquation(str) {
+function generateEquation(type, maxIntSize, evenOrOdd) {
 
     var a = generateRandomNumbers()[0];
     var b = generateRandomNumbers()[1];
     var equation;
 
-    switch (str) {
+    if (evenOrOdd === null) {
+        evenOrOdd = false;
+    }
+
+    if (evenOrOdd !== 'random') {
+        while ((a / b) % 2 !== 0) {
+            a = generateRandomNumbers()[0];
+            b = generateRandomNumbers()[0];
+        }
+    }
+
+    // 2x digit
+    while (a.toString().length === 1 || a.toString().length > maxIntSize) {
+        a = generateRandomNumbers()[0];
+    }
+    // prepend 0 
+    if (b.toString().length === 1) {
+        b = '0' + b;
+    }
+
+    var line = `____`;
+    switch (type) {
         case 'addition':
-            equation = ` ${a}\n+ ${b}`;
+            equation = `${type}\n${a}\n+ ${b}\n${line}`;
             break;
         case 'subtraction':
-            equation = ` ${a}\n- ${b}`;
+            equation = `${type}\n${a}\n- ${b}\n${line}`;
             break;
         case 'multiplication':
-            equation = ` ${a}\n* ${b}`;
+            equation = `${type}\n${a}\nx ${b}\n${line}`;
             break;
         case 'division':
-            equation = ` ${b} / ${a} =`;
+            while (b.toString().length > 1) {
+                b = generateRandomNumbers()[0];
+            }
+            while (b.toString().length > 1) {
+                b = generateRandomNumbers()[0];
+            }
+            equation = `${type}\n${b}/${a} =`;
             break;
         default:
         // 'invalid argument'
@@ -79,12 +106,22 @@ function generateEquation(str) {
     return equation;
 }
 
-function drawEquation(args) { // equation = `${b} / ${a}`
-    context.font = '50px';
-    var lineheight = 15;
+function drawEquation(args) {
+    // equation = `${b} / ${a}`
+    // first line is equation key 
     var lines = args.split('\n');
     for (var i = 0; i < lines.length; i++) {
-        context.fillText(lines[i], (canvas.width / 4), ((canvas.height / 2) + (i * lineheight)));
+        context.font = '40px Arial';
+        var indent = 0;
+        var lineheight = 50;
+        if (i === 0) { continue; }
+        if (lines[0] === 'multiplication' ||
+            lines[0] === 'addition' ||
+            lines[0] === 'subtraction') {
+            if (i === 1) { indent = 30; }
+            if (i === 3) { lineheight = 35; }
+        }
+        context.fillText(lines[i], ((canvas.width / 4) + indent), ((canvas.height / 2) + (i * lineheight)));
     }
 }
 
@@ -289,23 +326,27 @@ socket.on('connect', function () {
     // screenshot canvas
     // to do... 
 
-    plusBtn.addEventListener('click', function () {
-        var equation = generateEquation(this.id);
+    additionBtn.addEventListener('click', function () {
+        socket.emit('clearCanvas');
+        var equation = generateEquation(this.id, 2, null);
         socket.emit(this.id, equation);
     });
 
     subtractionBtn.addEventListener('click', function () {
-        var equation = generateEquation(this.id);
+        socket.emit('clearCanvas');
+        var equation = generateEquation(this.id, 2, null);
         socket.emit(this.id, equation);
     });
 
     divisionBtn.addEventListener('click', function () {
-        var equation = generateEquation(this.id);
+        socket.emit('clearCanvas');
+        var equation = generateEquation(this.id, 2, 'random');
         socket.emit(this.id, equation);
     });
 
     multiplicationBtn.addEventListener('click', function () {
-        var equation = generateEquation(this.id);
+        socket.emit('clearCanvas');
+        var equation = generateEquation(this.id, 2, null);
         socket.emit(this.id, equation);
     });
 
@@ -313,11 +354,11 @@ socket.on('connect', function () {
         socket.emit('clearCanvas');
     });
 
-    socket.on('addition', function (d) { drawEquation(d) });
-    socket.on('subtraction', function (d) { drawEquation(d) });
-    socket.on('division', function (d) { drawEquation(d) });
-    socket.on('multiplication', function (d) { drawEquation(d) });
-    socket.on('clearCanvas', function () { clearCanvas() });
+    socket.on('addition', function (d) { drawEquation(d); });
+    socket.on('subtraction', function (d) { drawEquation(d); });
+    socket.on('division', function (d) { drawEquation(d); });
+    socket.on('multiplication', function (d) { drawEquation(d); });
+    socket.on('clearCanvas', function () { clearCanvas(); });
 
     // socket data below    
     // draw line received from server

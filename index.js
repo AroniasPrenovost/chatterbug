@@ -30,20 +30,24 @@ io.on('connection', function (socket) {
         //  }
         // }
 
+        socket.on('addition', function (data) {
+            io.emit('addition', data);
+        });
 
-        socket.on('division', function (data) {
-            io.emit('division', data);
+        socket.on('subtraction', function (data) {
+            io.emit('subtraction', data);
         });
 
         socket.on('multiplication', function (data) {
             io.emit('multiplication', data);
         });
 
-
+        socket.on('division', function (data) {
+            io.emit('division', data);
+        });
 
         // draw 
-
-        // first send the history to the new client
+        // send the history to the new client
         for (var i in lineHistory) {
             socket.emit('drawLine', { line: lineHistory[i] });
         }
