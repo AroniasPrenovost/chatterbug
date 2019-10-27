@@ -165,11 +165,24 @@ function fixScrollToBottom(str) {
 }
 
 // flags: 'time', 'other', 'self', 'userlist'
-function appendLi(str, e, flag) {
+function appendLi(msgData, e, flag) {
     var li = document.createElement('LI');
-    var msgNode = document.createTextNode(str);
     var div = document.createElement('DIV');
-    div.appendChild(msgNode);
+    var innerDiv = document.createElement('DIV');
+    var innerDivTwo = document.createElement('DIV');
+    if (typeof msgData === 'object') {
+        var nameNode = document.createTextNode(msgData.alias);
+        innerDiv.className += ' alias';
+        innerDiv.appendChild(nameNode);
+        var msgNode = document.createTextNode(msgData.message);
+        innerDivTwo.appendChild(msgNode);
+    } else {
+        var msgNode = document.createTextNode(msgData);
+        innerDiv.appendChild(msgNode);
+    }
+    div.appendChild(innerDiv);
+    div.appendChild(innerDivTwo);
+
 
     switch (flag) {
         case 'other':
@@ -411,11 +424,11 @@ socket.on('connect', function () {
         }
     });
 
-    socket.on('chatMessage', function (msg) {
-        if (!msg.includes(userName)) {
-            appendLi(msg, messages, 'other');
+    socket.on('chatMessage', function (msgObj) {
+        if (msgObj.alias !== userName) {
+            appendLi(msgObj, messages, 'other');
         } else {
-            appendLi(msg, messages, 'self');
+            appendLi(msgObj, messages, 'self');
         }
     });
 

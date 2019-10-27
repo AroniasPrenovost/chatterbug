@@ -302,15 +302,22 @@ img.avatar {
 .otherChatLi {
     color: black; 
     float:left;
-    padding:12px;
+    padding:8px 12px 8px 12px;
+    border-radius: 20%;
     background: #ffffff;
 }
 
 .selfChatLi {
     color: black;
     float: right;
-    padding:12px;
+    padding:8px 12px 8px 12px;
+    border-radius: 20%;
     background: #dcf8c6;       
+}
+
+.alias {
+    font-weight:600;
+    font-size: 12px;
 }
 
 .userListLi {

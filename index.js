@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
 
         // chat { message}
         socket.on('chat message', function (msg) {
-            io.emit('chatMessage', socket_data.alias + ': ' + msg);
+            io.emit('chatMessage', { alias: socket_data.alias, message: msg });
             socket_data.message = msg;
         });
 
