@@ -2,5 +2,6 @@
 
 To run project locally:
 ```
+$ npm install 
 $ node index 
 ```
